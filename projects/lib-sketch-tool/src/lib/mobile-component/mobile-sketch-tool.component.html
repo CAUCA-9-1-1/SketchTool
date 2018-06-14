@@ -1,0 +1,65 @@
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<style>
+	select{
+		font-family: fontAwesome
+	}
+</style>
+
+<head>
+    <title>
+        Multiple Select Drop-Down List using AngularJS
+    </title>
+    <script
+        src="http://code.jquery.com/jquery-1.9.1.min.js"
+        type="text/javascript"
+    ></script>
+    <script
+        src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.1/angular.min.js"
+        type="text/javascript"
+    ></script>
+    <script
+        src="script.js"
+        type="text/javascript"
+    ></script>
+    <script
+        src="multiSelectCtrl.js"
+        type="text/javascript"
+    ></script>
+</head>
+
+<div
+    class="column"
+    appCanvasDirective
+    (mouseDown)="mouseDown($event)"
+    (mouseMove)="mouseMove($event)"
+    (mouseUp)="mouseUp($event)"
+>
+    <canvas id="canvas"></canvas>
+
+</div>
+
+<div class="editBar">
+    <select
+        class="form-control"
+        id="shape"
+    >
+        <option
+            [value]="undefined"
+            disabled
+            selected
+        >
+            
+        </option>
+        <option rectangle></option>
+        <option triangle></option>
+        <option circle></option>
+        <option line></option>
+        <option cross></option>
+    </select>
+
+    <mat-select>
+        <mat-option *ngFor="let img of pictograms.images">
+            <img src="{{pictograms.url}}{{img}}">
+        </mat-option>
+    </mat-select>
+</div>
