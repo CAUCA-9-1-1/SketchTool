@@ -1,0 +1,144 @@
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<div class="row">
+    <div class="column">
+        <form>
+            <button
+                color="accent"
+                (click)="crop()"
+                [disabled]="isDrawing"
+            >
+                <i class="fa fa-crop"></i>
+            </button>
+
+            <button
+                (click)="addShape('Rectangle')"
+                [disabled]="isDrawing"
+            >
+                <i class="fa fa-square"></i>
+            </button>
+
+            <button
+                (click)="addShape('Circle')"
+                [disabled]="isDrawing"
+            >
+                <i class="fa fa-circle"></i>
+            </button>
+
+            <button
+                (click)="addShape('Line')"
+                [disabled]="isDrawing"
+            >
+                <i class="fa fa-minus"></i>
+            </button>
+
+            <button
+                (click)="addText()"
+                [disabled]="isDrawing"
+            >
+                <i class="fa fa-font"></i>
+            </button>
+
+            <button
+                color="accent"
+                (click)="bringFoward()"
+                [disabled]="isDrawing"
+            >
+                <i class="fa fa-angle-up"></i>
+            </button>
+
+            <!-- <input class="colorPicker" [(colorPicker)]="strokeColor" [style.background]="strokeColor" (colorPickerChange)="changeStrokeColor()"
+      /> -->
+
+            <div class="separator"></div>
+
+            <button (click)="saveImage()">
+                <i class="fa fa-download"></i>
+            </button>
+
+        </form>
+    </div>
+
+    <div class="column">
+        <form>
+            <button (click)="draw()">
+                <i class="fa fa-pencil"></i>
+            </button>
+
+            <button
+                (click)="addShape('Triangle')"
+                [disabled]="isDrawing"
+            >
+                <i class="fa fa-caret-up"></i>
+            </button>
+
+            <button
+                (click)="group()"
+                [disabled]="isDrawing"
+            >
+                <i class="fa fa-object-group"></i>
+            </button>
+
+            <button
+                (click)="addShape('Cross')"
+                [disabled]="isDrawing"
+            >
+                <i class="fa fa-plus"></i>
+            </button>
+
+            <button
+                (click)="deleteSelection()"
+                [disabled]="isDrawing"
+            >
+                <i class="fa fa-trash"></i>
+            </button>
+
+            <button
+                color="accent"
+                (click)="sendToBack()"
+                [disabled]="isDrawing"
+            >
+                <i class="fa fa-angle-down"></i>
+            </button>
+
+            <!-- <input class="colorPicker" [(colorPicker)]="fillColor" [style.background]="fillColor" (colorPickerChange)="changeFillColor()"
+      /> -->
+
+            <div class="separator"></div>
+
+            <button
+                color="accent"
+                (click)="nextImage()"
+                [disabled]="isDrawing || isLastImage"
+            >
+                <i class="fa fa-forward"></i>
+            </button>
+
+        </form>
+    </div>
+
+    <div
+        class="column"
+        appCanvasDirective
+        (mouseDown)="mouseDown($event)"
+        (mouseMove)="mouseMove($event)"
+        (mouseUp)="mouseUp($event)"
+    >
+        <canvas id="canvas"></canvas>
+
+        <div class="pictograms">
+            <ul>
+                <li
+                    *ngFor="let img of pictograms.images"
+                    (click)="addImage(img)"
+                >
+                    <div class="picto">
+                        <img src="{{pictograms.url}}{{img}}">
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
