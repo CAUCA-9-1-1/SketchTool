@@ -13,20 +13,20 @@ const Black = '#000000';
 
 @Component({
   selector: 'lib-web-sketch-tool',
-  templateUrl: './web-sketch-tool.component.html',
-  styleUrls: ['./web-sketch-tool.component.css'],
+  templateUrl: './mobile-sketch-tool.component.html',
+  styleUrls: ['./mobile-sketch-tool.component.css'],
   providers: [CanvasManagerService]
 })
 
 export class WebSketchToolComponent implements OnInit {
-  @Input() public fillColor: string;
-  @Input() public strokeColor: string;
+  public fillColor: string;
+  public strokeColor: string;
 
   public availableGeometricShapes = AvailableGeometricShape;
   public isDrawing: boolean;
   public isCropping: boolean;
   public isLastImage: boolean;
-  public pictograms: Pictograms;
+  public pictograms = new Pictograms();
 
   @Input() public imgUrl: string;
 
@@ -40,7 +40,6 @@ export class WebSketchToolComponent implements OnInit {
   ngOnInit() {
     this.canvasManagerService.emptyCanvas();
     this.canvasManagerService.setBackgroundFromURL(this.imgUrl, 0.8);
-    console.log(this.imgUrl);
     this.isDrawing = false;
   }
 
