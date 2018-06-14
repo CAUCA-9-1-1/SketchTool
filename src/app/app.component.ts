@@ -7,4 +7,5 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'app';
+  public imgUrl = 'https://qph.fs.quoracdn.net/main-qimg-6c93fa689a0752ee60f2f39a0533e247';
 }

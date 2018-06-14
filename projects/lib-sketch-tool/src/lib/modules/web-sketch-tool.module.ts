@@ -13,8 +13,7 @@ import { CanvasClickDirective } from './../directives/canvas-click.directive';
   ],
   declarations: [
     CanvasClickDirective,
-    WebSketchToolComponent,
-    CanvasClickDirective,
+    WebSketchToolComponent
   ],
   exports: [
     WebSketchToolComponent,
