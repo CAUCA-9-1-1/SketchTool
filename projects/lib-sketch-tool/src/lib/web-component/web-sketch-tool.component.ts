@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, HostListener } from '@angular/core';
 import { forEach } from '@angular/router/src/utils/collection';
 import { CanvasManagerService, AvailableGeometricShape } from './../services/canvas-manager.service';
-import { Pictograms } from './../../pictograms';
+import { Pictograms } from './../classes/pictograms';
 import { fabric } from 'fabric';
 
 export enum KEY_CODE {
@@ -12,13 +12,13 @@ export enum KEY_CODE {
 const Black = '#000000';
 
 @Component({
-  selector: 'lib-sketch-tool',
-  templateUrl: './sketch-tool.component.html',
-  styleUrls: ['./sketch-tool.component.css'],
+  selector: 'lib-web-sketch-tool',
+  templateUrl: './web-sketch-tool.component.html',
+  styleUrls: ['./web-sketch-tool.component.css'],
   providers: [CanvasManagerService]
 })
 
-export class SketchToolComponent implements OnInit {
+export class WebSketchToolComponent implements OnInit {
   @Input() public fillColor: string;
   @Input() public strokeColor: string;
 

@@ -2,21 +2,21 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 
 import { ColorPickerModule } from 'narik-angular-color-picker';
-import { SketchToolComponent } from './sketch-tool.component';
+import { WebSketchToolComponent } from './web-sketch-tool.component';
 
 describe('InspectionSketchToolComponent', () => {
-  let component: SketchToolComponent;
-  let fixture: ComponentFixture<SketchToolComponent>;
+  let component: WebSketchToolComponent;
+  let fixture: ComponentFixture<WebSketchToolComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [SketchToolComponent],
+      declarations: [WebSketchToolComponent],
       imports: [FormsModule]
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SketchToolComponent);
+    fixture = TestBed.createComponent(WebSketchToolComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
