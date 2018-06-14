@@ -1,0 +1,12 @@
+{
+  "name": "lib-sketch-tool",
+  "version": "0.1.4",
+  "peerDependencies": {
+    "@angular/common": "^6.0.0-rc.0 || ^6.0.0",
+    "@angular/core": "^6.0.0-rc.0 || ^6.0.0",
+    "fabric": "^2.3.2"
+  },
+  "dependencies": {
+    "@types/fabric": "^1.5.36"
+  }
+}
