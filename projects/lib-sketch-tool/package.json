@@ -1,9 +1,0 @@
-{
-  "name": "lib-sketch-tool",
-  "version": "0.1.11",
-  "peerDependencies": {
-    "fabric": "2.3.2",
-    "@types/fabric": "1.5.36",
-    "@angular/material": "5.2.5"
-  }
-}

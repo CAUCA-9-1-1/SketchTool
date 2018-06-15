@@ -1,0 +1,70 @@
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+<div
+    class="column"
+    appCanvasDirective
+    (mouseDown)="mouseDown($event)"
+    (mouseMove)="mouseMove($event)"
+    (mouseUp)="mouseUp($event)"
+>
+    <canvas id="canvas"></canvas>
+
+</div>
+
+<mat-form-field>
+    <mat-select
+        class="form-control"
+        id="shape"
+        [placeholder]="shapePlaceholder"
+    >
+        <mat-option (click)="addShape('Rectangle')">
+            <i class="fa fa-square"></i>
+        </mat-option>
+        <mat-option  (click)="addShape('Triangle')">
+            <i class="fa fa-caret-up"></i>
+        </mat-option>
+        <mat-option (click)="addShape('Circle')">
+            <i class="fa fa-circle"></i>
+        </mat-option>
+        <mat-option (click)="addShape('Line')">
+            <i class="fa fa-minus"></i>
+        </mat-option>
+        <mat-option (click)="addShape('Cross')">
+            <i class="fa fa-plus"></i>
+        </mat-option>
+        <mat-option (click)="addText()">
+            <i class="fa fa-font"></i>
+        </mat-option>
+    </mat-select>
+</mat-form-field>
+
+<mat-form-field>
+    <mat-select [placeholder]="iconPlaceholder">
+        <mat-option
+            *ngFor="let img of pictograms.images"
+            (click)="addImage(img)"
+        >
+            <img src="{{pictograms.url}}{{img}}">
+        </mat-option>
+    </mat-select>
+</mat-form-field>
+
+<mat-form-field>
+    <mat-select [placeholder]="editPlaceholder">
+        <mat-option (click)="crop()">
+            <i class="fa fa-crop"></i>
+        </mat-option>
+        <mat-option (click)="group()">
+            <i class="fa fa-object-group"></i>
+        </mat-option>
+        <mat-option (click)="bringFoward()">
+            <i class="fa fa-angle-up"></i>
+        </mat-option>
+        <mat-option (click)="sendToBack()">
+            <i class="fa fa-angle-down"></i>
+        </mat-option>
+        <mat-option (click)="deleteSelection()">
+            <i class="fa fa-trash"></i>
+        </mat-option>
+    </mat-select>
+</mat-form-field>
