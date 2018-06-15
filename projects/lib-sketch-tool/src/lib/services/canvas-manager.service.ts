@@ -301,11 +301,11 @@ export class CanvasManagerService {
     return this.canvas.toDataURL('image/png');
   }
 
-  public get canvasObjects(): [fabric.Object] {
+  public get canvasObjects() {
     return this.canvas.getObjects();
   }
 
-  public get canvasBackgroundImage(): fabric.Image {
+  public get canvasBackgroundImage() {
     return this.canvas.backgroundImage;
   }
 
@@ -313,7 +313,7 @@ export class CanvasManagerService {
     this.canvas.setActiveObject(this.canvas.item(itemNumber));
   }
 
-  public get activeObject(): fabric.Object {
+  public get activeObject() {
     return this.canvas.getActiveObject();
   }
 
