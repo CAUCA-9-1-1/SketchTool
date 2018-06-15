@@ -217,34 +217,25 @@ export class CanvasManagerService {
     );
   }
 
-  public setBackgroundFromURL(
-    backgroundImageURL: string,
-    scale: number
-  ): Promise<void> {
+  public setBackgroundFromURL(backgroundImageURL: string, scale: number): Promise<void> {
     const canvas = this.canvas;
 
-    return new Promise(
-      (resolve, reject): void => {
-        const image = new Image();
-        image.onload = function(img) {
-          const fabricImage = new fabric.Image(image, {});
-          canvas.setWidth(fabricImage.width * scale);
-          canvas.setHeight(fabricImage.height * scale);
-        };
-        image.src = backgroundImageURL;
+    return new Promise((resolve, reject): void => {
+      const image = new Image();
+      image.onload = function (img) {
+        const fabricImage = new fabric.Image(image, {});
+        canvas.setWidth(fabricImage.width * scale);
+        canvas.setHeight(fabricImage.height * scale);
+      };
+      image.src = backgroundImageURL;
 
-        this.canvas.setBackgroundImage(
-          backgroundImageURL,
-          this.canvas.renderAll.bind(this.canvas),
-          {
-            backgroundImageStretch: false,
-            scaleX: scale,
-            scaleY: scale
-          }
-        );
-        resolve();
-      }
-    );
+      this.canvas.setBackgroundImage(backgroundImageURL, this.canvas.renderAll.bind(this.canvas), {
+        backgroundImageStretch: false,
+        scaleX: scale,
+        scaleY: scale
+      });
+      resolve();
+    });
   }
 
   public changeSelectedObjectsFillColor(color: string): void {
@@ -484,7 +475,7 @@ export class CanvasManagerService {
   }
 }
 
-// Maintain stroke width when scaling objects
+/* // Maintain stroke width when scaling objects
 fabric.Object.prototype.render = function(ctx) {
   if (!this.stroke || this.strokeWidth === 0) {
     return;
@@ -499,4 +490,4 @@ fabric.Object.prototype.render = function(ctx) {
   ctx.stroke();
   ctx.restore();
 };
-
+ */

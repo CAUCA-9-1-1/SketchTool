@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 
 import { WebSketchToolModule } from 'lib-sketch-tool';
+import { MobileSketchToolModule } from 'lib-sketch-tool';
 
 @NgModule({
   declarations: [
@@ -12,6 +13,7 @@ import { WebSketchToolModule } from 'lib-sketch-tool';
   imports: [
     BrowserModule,
     WebSketchToolModule,
+    MobileSketchToolModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

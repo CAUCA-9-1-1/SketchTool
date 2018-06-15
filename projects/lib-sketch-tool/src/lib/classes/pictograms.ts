@@ -1,5 +1,5 @@
 export class Pictograms {
-    public url = './../assets/pictogrammes/';
+    public url = './../assets/pictograms/';
     public images = [
       'Annonciateur.png',
       'BoiteClees.png',

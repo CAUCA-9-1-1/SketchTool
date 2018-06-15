@@ -2,19 +2,15 @@ import { Component, OnInit, Input, HostListener } from '@angular/core';
 import { forEach } from '@angular/router/src/utils/collection';
 import { CanvasManagerService, AvailableGeometricShape } from './../services/canvas-manager.service';
 import { Pictograms } from './../classes/pictograms';
+import { KEY_CODE } from './../constants/key-code';
 import { fabric } from 'fabric';
-
-export enum KEY_CODE {
-  DELETE = 46,
-  BACKSPACE = 8
-}
 
 const Black = '#000000';
 
 @Component({
   selector: 'lib-web-sketch-tool',
-  templateUrl: './mobile-sketch-tool.component.html',
-  styleUrls: ['./mobile-sketch-tool.component.css'],
+  templateUrl: './web-sketch-tool.component.html',
+  styleUrls: ['./web-sketch-tool.component.css'],
   providers: [CanvasManagerService]
 })
 
