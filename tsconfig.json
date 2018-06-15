@@ -17,6 +17,12 @@
       "dom"
     ],
     "paths": {
+        "lib-sketch-tool": [
+          "dist/lib-sketch-tool"
+        ],
+        "lib-sketch-tool/*": [
+          "dist/lib-sketch-tool/*"
+        ]
     }
   }
 }
