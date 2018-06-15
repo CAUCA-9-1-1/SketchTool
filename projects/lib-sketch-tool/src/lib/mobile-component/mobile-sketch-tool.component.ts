@@ -23,6 +23,10 @@ export class MobileSketchToolComponent implements OnInit {
   public isLastImage: boolean;
   public pictograms = new Pictograms();
 
+  public shapePlaceholder = 'Formes';
+  public iconPlaceholder = 'Icones';
+  public editPlaceholder = 'Édition';
+
   @Input() public imgUrl: string;
 
   constructor(private canvasManagerService: CanvasManagerService) {

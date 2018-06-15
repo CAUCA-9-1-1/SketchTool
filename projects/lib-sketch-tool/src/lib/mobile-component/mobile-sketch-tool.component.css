@@ -1,8 +1,13 @@
 .editBar {
   background-color: grey;
-  width: 100%;
+  padding: 32px;
 }
 
-select {
-  font-family: FontAwesome;
+.mat-form-field {
+  width: 100px !important;
 }
+
+.mat-select-value {
+  max-height: 100px !important;
+  align-content: center !important;
+}  
