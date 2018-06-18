@@ -1,24 +1,8 @@
 import { Injectable } from '@angular/core';
 import { fabric } from 'fabric';
 
-export enum AvailableGeometricShape {
-  'Rectangle',
-  'Circle',
-  'Triangle',
-  'Line',
-  'Cross'
-}
-
-const SHAPE_DATA = {
-  width: 50,
-  height: 50,
-  left: 50,
-  top: 50,
-  radius: 25,
-  stroke: 3,
-  freeDrawingBrushWidth: 10,
-
-};
+import { AvailableGeometricShape } from './../constants/available-geometric-shapes';
+import { SHAPE_DATA } from './../constants/shape-data';
 
 @Injectable()
 export class CanvasManagerService {

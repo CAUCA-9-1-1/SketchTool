@@ -15,7 +15,7 @@
     <mat-select
         class="form-control"
         id="shape"
-        [placeholder]="shapePlaceholder"
+        <!-- [placeholder]="shapePlaceholder" -->
     >
         <mat-option (click)="addShape('Rectangle')">
             <i class="fa fa-square"></i>
@@ -39,7 +39,7 @@
 </mat-form-field>
 
 <mat-form-field>
-    <mat-select [placeholder]="iconPlaceholder">
+    <mat-select <!-- [placeholder]="iconPlaceholder"> -->
         <mat-option
             *ngFor="let img of pictograms.images"
             (click)="addImage(img)"
@@ -50,7 +50,7 @@
 </mat-form-field>
 
 <mat-form-field>
-    <mat-select [placeholder]="editPlaceholder">
+    <mat-select <!-- [placeholder]="editPlaceholder"> -->
         <mat-option (click)="crop()">
             <i class="fa fa-crop"></i>
         </mat-option>

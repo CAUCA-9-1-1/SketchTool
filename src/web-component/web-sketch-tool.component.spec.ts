@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 
-import { ColorPickerModule } from 'narik-angular-color-picker';
+/* import { ColorPickerModule } from 'narik-angular-color-picker'; */
 import { WebSketchToolComponent } from './web-sketch-tool.component';
 
 describe('InspectionSketchToolComponent', () => {

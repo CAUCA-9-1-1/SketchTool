@@ -1,5 +1,6 @@
 import { TestBed, inject, async } from '@angular/core/testing';
-import { CanvasManagerService,  AvailableGeometricShape } from './canvas-manager.service';
+import { CanvasManagerService } from './canvas-manager.service';
+import { AvailableGeometricShape } from './../constants/available-geometric-shapes';
 import { fabric } from 'fabric';
 
 const testImageURL =
