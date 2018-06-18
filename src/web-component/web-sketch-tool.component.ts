@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, HostListener } from '@angular/core';
 import { forEach } from '@angular/router/src/utils/collection';
-import { CanvasManagerService, AvailableGeometricShape } from './../services/canvas-manager.service';
+import { CanvasManagerService } from './../services/canvas-manager.service';
+import { AvailableGeometricShape } from './../constants/available-geometric-shapes';
 import { Pictograms } from './../classes/pictograms';
 import { KEY_CODE } from './../constants/key-code';
 import { fabric } from 'fabric';

@@ -1,11 +1,11 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "project": {
-    "name": "angular-library-starter-kit"
+    "name": "lib-sketch-tool"
   },
   "apps": [
     {
-      "root": "example",
+      "root": "",
       "outDir": "dist",
       "assets": [
         "assets",
@@ -15,9 +15,9 @@
       "main": "main.ts",
       "polyfills": "polyfills.ts",
       "test": "test.ts",
-      "tsconfig": "tsconfig.app.json",
+      "tsconfig": "tsconfig.json",
       "testTsconfig": "tsconfig.spec.json",
-      "prefix": "app",
+      "prefix": "lib",
       "styles": [],
       "scripts": [],
       "environmentSource": "config/environment.ts",
@@ -32,16 +32,6 @@
       "config": "./protractor.conf.js"
     }
   },
-  "lint": [
-    {
-      "project": "example/tsconfig.app.json",
-      "exclude": "**/node_modules/**"
-    },
-    {
-      "project": "example/tsconfig.spec.json",
-      "exclude": "**/node_modules/**"
-    }
-  ],
   "test": {
     "karma": {
       "config": "./karma.conf.js"
