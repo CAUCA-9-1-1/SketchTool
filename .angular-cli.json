@@ -42,6 +42,9 @@
     "class": {
       "spec": false
     },
-    "component": {}
+    "component": {},
+    "build": {
+      "preserveSymlinks": true
+    }
   }
 }
