@@ -20,6 +20,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MobileSketchToolComponent,
     TestCanvasClickComponent,
   ],
-  exports: [WebSketchToolComponent, MobileSketchToolComponent]
+  exports: [MobileSketchToolComponent]
 })
 export class SketchToolModule {}

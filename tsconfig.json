@@ -3,11 +3,11 @@
   "compilerOptions": {
     "outDir": "./dist/lib-sketch-tool",
     "sourceMap": true,
-    "declaration": true,
+    "declaration": false,
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "target": "es6",
+    "target": "es5",
     "typeRoots": [
       "node_modules/@types"
     ],
