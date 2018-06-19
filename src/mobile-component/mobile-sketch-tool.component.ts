@@ -10,7 +10,7 @@ const Black = '#000000';
 @Component({
   selector: 'lib-mobile-sketch-tool',
   templateUrl: './mobile-sketch-tool.component.html',
-  styleUrls: ['./mobile-sketch-tool.component.css'],
+  styleUrls: ['./mobile-sketch-tool.component.scss'],
   providers: [CanvasManagerService]
 })
 

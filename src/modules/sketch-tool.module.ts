@@ -1,22 +1,25 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-/* import {ColorPickerModule} from 'narik-angular-color-picker'; */
+// import {ColorPickerModule} from 'narik-angular-color-picker';
 
-import { MobileSketchToolModule } from './mobile-sketch-tool.module';
-import { WebSketchToolModule } from './web-sketch-tool.module';
+import { MobileSketchToolComponent } from './../mobile-component/mobile-sketch-tool.component';
+import { WebSketchToolComponent } from './../web-component/web-sketch-tool.component';
+import { TestCanvasClickComponent } from './../directives/canvas-click.directive.spec';
+
 import { CanvasClickDirective } from './../directives/canvas-click.directive';
 
-
+import { MatSelectModule } from '@angular/material/select';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
-  imports: [
-    CommonModule,
-/*     ColorPickerModule, */
-    WebSketchToolModule,
-    MobileSketchToolModule,
+  imports: [CommonModule, BrowserAnimationsModule, MatSelectModule],
+  declarations: [
+    CanvasClickDirective,
+    WebSketchToolComponent,
+    MobileSketchToolComponent,
+    TestCanvasClickComponent,
   ],
-  declarations: [CanvasClickDirective],
-  exports: []
+  exports: [WebSketchToolComponent, MobileSketchToolComponent]
 })
 export class SketchToolModule {}

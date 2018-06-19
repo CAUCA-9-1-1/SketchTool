@@ -11,7 +11,7 @@ const Black = '#000000';
 @Component({
   selector: 'lib-web-sketch-tool',
   templateUrl: './web-sketch-tool.component.html',
-  styleUrls: ['./web-sketch-tool.component.css'],
+  styleUrls: ['./web-sketch-tool.component.scss'],
   providers: [CanvasManagerService]
 })
 
