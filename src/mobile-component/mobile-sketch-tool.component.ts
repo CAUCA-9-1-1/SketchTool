@@ -2,7 +2,6 @@ import { Component, OnInit, Input, HostListener } from '@angular/core';
 import { forEach } from '@angular/router/src/utils/collection';
 import { CanvasManagerService } from './../services/canvas-manager.service';
 import { AvailableGeometricShape } from './../constants/available-geometric-shapes';
-import { Pictograms } from './../classes/pictograms';
 import { fabric } from 'fabric';
 
 const Black = '#000000';
