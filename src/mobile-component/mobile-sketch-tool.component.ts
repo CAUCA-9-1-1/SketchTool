@@ -10,7 +10,7 @@ const Black = '#000000';
 @Component({
   selector: 'lib-mobile-sketch-tool',
   templateUrl: './mobile-sketch-tool.component.html',
-  styleUrls: ['./mobile-sketch-tool.component.scss'],
+  styleUrls: ['/src/lib-sketch-tool/mobile-component/mobile-sketch-tool.component.css'],
   providers: [CanvasManagerService]
 })
 
@@ -22,13 +22,14 @@ export class MobileSketchToolComponent implements OnInit {
   public isDrawing: boolean;
   public isCropping: boolean;
   public isLastImage: boolean;
-  public pictograms = new Pictograms();
 
   public shapePlaceholder = 'Formes';
   public iconPlaceholder = 'Icones';
   public editPlaceholder = 'Édition';
 
   @Input() public imgUrl: string;
+  @Input() public iconsPath: string;
+  @Input() public icons:  [string];
 
   constructor(private canvasManagerService: CanvasManagerService) {
     this.strokeColor = Black;
@@ -57,7 +58,7 @@ export class MobileSketchToolComponent implements OnInit {
 
   public addImage(source: string) {
     if (!this.isDrawing) {
-      this.canvasManagerService.addImage(this.pictograms.url + source);
+      this.canvasManagerService.addImage(this.iconsPath + source);
     }
   }
 

@@ -1,6 +1,6 @@
 {
   "name": "lib-sketch-tool",
-  "version": "0.1.27",
+  "version": "0.1.29",
   "license": "MIT",
   "main": "src/main.ts",
   "scripts": {
@@ -29,7 +29,7 @@
     "@angular/forms": "5.0.3",
     "@angular/http": "5.0.3",
     "@angular/language-service": "5.0.3",
-    "@angular/material": "^5.0.0",
+    "@angular/material": "5.0.0",
     "@angular/platform-browser": "5.0.3",
     "@angular/platform-browser-dynamic": "5.0.3",
     "@angular/router": "5.0.3",
