@@ -1,21 +1,23 @@
-import { Component, OnInit, Input, HostListener } from '@angular/core';
-import { forEach } from '@angular/router/src/utils/collection';
-import { CanvasManagerService } from './../services/canvas-manager.service';
-import { AvailableGeometricShape } from './../constants/available-geometric-shapes';
-import { fabric } from 'fabric';
+import {Component, Input, OnInit} from '@angular/core';
+import {ActionSheetController} from 'ionic-angular';
+
+import {AvailableGeometricShape} from './../constants/available-geometric-shapes';
+import {CanvasManagerService} from './../services/canvas-manager.service';
 
 const Black = '#000000';
 
 @Component({
   selector: 'lib-mobile-sketch-tool',
   templateUrl: './mobile-sketch-tool.component.html',
-  styleUrls: ['/src/lib-sketch-tool/mobile-component/mobile-sketch-tool.component.css'],
+  styleUrls: [
+    '/src/lib-sketch-tool/mobile-component/mobile-sketch-tool.component.scss'
+  ],
   providers: [CanvasManagerService]
 })
-
 export class MobileSketchToolComponent implements OnInit {
   public fillColor: string;
   public strokeColor: string;
+  public shape: string;
 
   public availableGeometricShapes = AvailableGeometricShape;
   public isDrawing: boolean;
@@ -28,9 +30,12 @@ export class MobileSketchToolComponent implements OnInit {
 
   @Input() public imgUrl: string;
   @Input() public iconsPath: string;
-  @Input() public icons:  [string];
+  @Input() public icons: [string];
 
-  constructor(private canvasManagerService: CanvasManagerService) {
+  constructor(
+    private canvasManagerService: CanvasManagerService,
+    public actionSheetCtrl: ActionSheetController
+  ) {
     this.strokeColor = Black;
     this.isDrawing = false;
     this.isCropping = false;
@@ -141,5 +146,57 @@ export class MobileSketchToolComponent implements OnInit {
 
   public group() {
     this.canvasManagerService.groupSelectedObjects();
+  }
+
+  public presentActionSheet() {
+    const actionSheet = this.actionSheetCtrl.create({
+      title: 'Ajouter une forme',
+      buttons: [
+        {
+          text: '\uf0c8',
+          handler: () => {
+            this.canvasManagerService.addGeometricShape(this.strokeColor, this.fillColor, AvailableGeometricShape.Rectangle);
+          }
+        },
+        {
+          text: '\uf0d8',
+          handler: () => {
+            this.canvasManagerService.addGeometricShape(this.strokeColor, this.fillColor, AvailableGeometricShape.Triangle);
+          }
+        },
+        {
+          text: '\uf111',
+          handler: () => {
+            this.canvasManagerService.addGeometricShape(this.strokeColor, this.fillColor, AvailableGeometricShape.Circle);
+          }
+        },
+        {
+          text: '\uf068',
+          handler: () => {
+            this.canvasManagerService.addGeometricShape(this.strokeColor, this.fillColor, AvailableGeometricShape.Line);
+          }
+        },
+        {
+          text: '\uf067',
+          handler: () => {
+            this.canvasManagerService.addGeometricShape(this.strokeColor, this.fillColor, AvailableGeometricShape.Cross);
+          }
+        },
+        {
+          text: '\uf031',
+          handler: () => {
+            this.canvasManagerService.addText(this.strokeColor, "");
+          }
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        }
+      ]
+    });
+    actionSheet.present();
   }
 }
