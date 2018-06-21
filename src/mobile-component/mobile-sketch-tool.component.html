@@ -1,7 +1,9 @@
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<head>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+</head>
 
 <div
-    class="column"
+    class="div-canvas-container"
     appCanvasDirective
     (mouseDown)="mouseDown($event)"
     (mouseMove)="mouseMove($event)"
@@ -11,60 +13,60 @@
 
 </div>
 
-<mat-form-field>
-    <mat-select
+<ion-toolbar>
+  <!--   <ion-select
         class="form-control"
         id="shape"
-        <!-- [placeholder]="shapePlaceholder" -->
+        [placeholder]="shapePlaceholder"
+        [(ngModel)]="shape"
+        (ionChange)="addShape(shape)"
     >
-        <mat-option (click)="addShape('Rectangle')">
-            <i class="fa fa-square"></i>
-        </mat-option>
-        <mat-option  (click)="addShape('Triangle')">
-            <i class="fa fa-caret-up"></i>
-        </mat-option>
-        <mat-option (click)="addShape('Circle')">
-            <i class="fa fa-circle"></i>
-        </mat-option>
-        <mat-option (click)="addShape('Line')">
-            <i class="fa fa-minus"></i>
-        </mat-option>
-        <mat-option (click)="addShape('Cross')">
-            <i class="fa fa-plus"></i>
-        </mat-option>
-        <mat-option (click)="addText()">
+        <ion-option value="Rectangle">  &#xf0e7; Test</ion-option>
+        <ion-option value="Triangle">Triangle</ion-option>
+        <ion-option value="Circle">Circle</ion-option>
+        <ion-option value="Line">Line</ion-option>
+        <ion-option value="Cross">Cross</ion-option>
+
+    </ion-select> -->
+    <!-- <ion-option (click)="addText()">
             <i class="fa fa-font"></i>
-        </mat-option>
-    </mat-select>
-</mat-form-field>
+        </ion-option> -->
 
-<mat-form-field>
-    <mat-select <!-- [placeholder]="iconPlaceholder"> -->
-        <mat-option
-            *ngFor="let img of pictograms.images"
-            (click)="addImage(img)"
-        >
-            <img src="{{pictograms.url}}{{img}}">
-        </mat-option>
-    </mat-select>
-</mat-form-field>
+        <button ion-button (click)='presentActionSheet()'>Formes</button>
 
-<mat-form-field>
-    <mat-select <!-- [placeholder]="editPlaceholder"> -->
-        <mat-option (click)="crop()">
-            <i class="fa fa-crop"></i>
+    <mat-form-field>
+        <mat-select [placeholder]="iconPlaceholder">
+            <mat-option
+                *ngFor="let img of icons"
+                (click)="addImage(img)"
+            >
+                <img src="{{iconsPath}}{{img}}">
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-option>
+            <mat-select [placeholder]="editPlaceholder">
+
+                <mat-option (click)="crop()">
+                    <i class="fa fa-crop"></i>
+                </mat-option>
+                <mat-option (click)="group()">
+                    <i class="fa fa-object-group"></i>
+                </mat-option>
+                <mat-option (click)="bringFoward()">
+                    <i class="fa fa-angle-up"></i>
+                </mat-option>
+                <mat-option (click)="sendToBack()">
+                    <i class="fa fa-angle-down"></i>
+                </mat-option>
+                <mat-option (click)="deleteSelection()">
+                    <i class="fa fa-trash"></i>
+                </mat-option>
+            </mat-select>
         </mat-option>
-        <mat-option (click)="group()">
-            <i class="fa fa-object-group"></i>
-        </mat-option>
-        <mat-option (click)="bringFoward()">
-            <i class="fa fa-angle-up"></i>
-        </mat-option>
-        <mat-option (click)="sendToBack()">
-            <i class="fa fa-angle-down"></i>
-        </mat-option>
-        <mat-option (click)="deleteSelection()">
-            <i class="fa fa-trash"></i>
-        </mat-option>
-    </mat-select>
-</mat-form-field>
+    </mat-form-field>
+</ion-toolbar>
+
+<script src="https://unpkg.com/ionicons@4.2.0/dist/ionicons.js"></script>
