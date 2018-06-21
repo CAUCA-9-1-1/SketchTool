@@ -1,8 +1,8 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {ActionSheetController} from 'ionic-angular';
+import { Component, Input, OnInit } from '@angular/core';
+import { ActionSheetController } from 'ionic-angular';
 
-import {AvailableGeometricShape} from './../constants/available-geometric-shapes';
-import {CanvasManagerService} from './../services/canvas-manager.service';
+import { AvailableGeometricShape } from './../constants/available-geometric-shapes';
+import { CanvasManagerService } from './../services/canvas-manager.service';
 
 const Black = '#000000';
 
@@ -148,55 +148,146 @@ export class MobileSketchToolComponent implements OnInit {
     this.canvasManagerService.groupSelectedObjects();
   }
 
-  public presentActionSheet() {
+  public presentShapeActionSheet() {
     const actionSheet = this.actionSheetCtrl.create({
       title: 'Ajouter une forme',
       buttons: [
         {
           text: '\uf0c8',
           handler: () => {
-            this.canvasManagerService.addGeometricShape(this.strokeColor, this.fillColor, AvailableGeometricShape.Rectangle);
+            this.canvasManagerService.addGeometricShape(
+              this.strokeColor,
+              this.fillColor,
+              AvailableGeometricShape.Rectangle
+            );
           }
         },
         {
           text: '\uf0d8',
           handler: () => {
-            this.canvasManagerService.addGeometricShape(this.strokeColor, this.fillColor, AvailableGeometricShape.Triangle);
+            this.canvasManagerService.addGeometricShape(
+              this.strokeColor,
+              this.fillColor,
+              AvailableGeometricShape.Triangle
+            );
           }
         },
         {
           text: '\uf111',
           handler: () => {
-            this.canvasManagerService.addGeometricShape(this.strokeColor, this.fillColor, AvailableGeometricShape.Circle);
+            this.canvasManagerService.addGeometricShape(
+              this.strokeColor,
+              this.fillColor,
+              AvailableGeometricShape.Circle
+            );
           }
         },
         {
           text: '\uf068',
           handler: () => {
-            this.canvasManagerService.addGeometricShape(this.strokeColor, this.fillColor, AvailableGeometricShape.Line);
+            this.canvasManagerService.addGeometricShape(
+              this.strokeColor,
+              this.fillColor,
+              AvailableGeometricShape.Line
+            );
           }
         },
         {
           text: '\uf067',
           handler: () => {
-            this.canvasManagerService.addGeometricShape(this.strokeColor, this.fillColor, AvailableGeometricShape.Cross);
+            this.canvasManagerService.addGeometricShape(
+              this.strokeColor,
+              this.fillColor,
+              AvailableGeometricShape.Cross
+            );
           }
         },
         {
           text: '\uf031',
           handler: () => {
-            this.canvasManagerService.addText(this.strokeColor, "");
-          }
-        },
-        {
-          text: 'Cancel',
-          role: 'cancel',
-          handler: () => {
-            console.log('Cancel clicked');
+            this.canvasManagerService.addText(this.strokeColor, '');
           }
         }
       ]
     });
+    actionSheet.present();
+  }
+
+  public presentEditActionSheet() {
+    const actionSheet = this.actionSheetCtrl.create({
+      title: 'Édition',
+      buttons: [
+        {
+          text: '\uf125',
+          handler: () => {
+            this.crop();
+          }
+        },
+        {
+          text: '\uf247',
+          handler: () => {
+            this.group();
+          }
+        },
+        {
+          text: '\uf0de',
+          handler: () => {
+            this.bringFoward();
+          }
+        },
+        {
+          text: '\uf0dd',
+          handler: () => {
+            this.sendToBack();
+          }
+        },
+        {
+          text: '\uf2ed',
+          handler: () => {
+            this.deleteSelection();
+          }
+        }
+      ]
+    });
+    actionSheet.present();
+  }
+
+  public presentPictogramsActionSheet() {
+    let buttons = [];
+    let actionSheetStyles = [];
+    let images = this.icons;
+    for (let i = 0; i < images.length; i++) {
+      let style = document.createElement('style');
+      style.type = 'text/css';
+      style.innerHTML =
+        '.customCSSClass' +
+        i +
+        '{background: url(' +
+        "'" + this.iconsPath +
+        images[i] +
+        "'" +
+        ') no-repeat !important;padding-left:80px;height:80px}';
+      document.getElementsByTagName('head')[0].appendChild(style);
+      actionSheetStyles.push(style);
+      buttons.push({
+        role: 'destructive',
+        cssClass: 'customCSSClass' + i
+      });
+    }
+    let actionSheet = this.actionSheetCtrl.create({
+      title: 'Ajouter un pictogramme.',
+      buttons: buttons
+    });
+   actionSheet.onDidDismiss(() => {
+      // Don't forget to delete css styles on close of actionSheet:
+      for (let i = 0; i < actionSheetStyles.length; i++) {
+        if (actionSheetStyles[i].parentNode != null)
+          actionSheetStyles[i].parentNode.removeChild(
+            actionSheetStyles[i]
+          );
+      }
+    });
+
     actionSheet.present();
   }
 }
