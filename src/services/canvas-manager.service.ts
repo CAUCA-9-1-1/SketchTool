@@ -207,7 +207,9 @@ export class CanvasManagerService {
   ): Promise<void> {
     const canvas = this.canvas;
 
-    const container = document.getElementsByClassName("div-canvas-container")[0];
+    const container = document.getElementsByClassName(
+      'div-canvas-container'
+    )[0];
 
     canvas.setWidth(container.clientWidth);
     canvas.setHeight(container.clientHeight);
@@ -217,53 +219,38 @@ export class CanvasManagerService {
         if (backgroundImageURL == null) return reject();
         const image = new Image();
         image.onload = function() {
-          console.log('ON LOAD');
+          const f_img = new fabric.Image(image, {});
 
-
-
-          const f_img = new fabric.Image(image, {
-          });
-
-           let canvasWidth = canvas.getWidth();
+          let canvasWidth = canvas.getWidth();
           let canvasHeight = canvas.getHeight();
-
-          console.log('SCALING');
-          console.log(canvasWidth);
-          console.log(canvasHeight);
 
           let canvasAspect = canvasWidth / canvasHeight;
           let imgAspect = f_img.width / f_img.height;
           let left, top, scaleFactor;
 
           if (canvasAspect <= imgAspect) {
-              scaleFactor = canvasWidth / f_img.width;
-              left = 0;
-              top = -((f_img.height * scaleFactor) - canvasHeight) / 2;
+            scaleFactor = canvasWidth / f_img.width;
+            left = 0;
+            top = -(f_img.height * scaleFactor - canvasHeight) / 2;
           } else {
-              scaleFactor = canvasHeight / f_img.height;
-              top = 0;
-              left = -((f_img.width * scaleFactor) - canvasWidth) / 2;
+            scaleFactor = canvasHeight / f_img.height;
+            top = 0;
+            left = -(f_img.width * scaleFactor - canvasWidth) / 2;
           }
-
-          console.log(scaleFactor);
-
 
           canvas.setBackgroundImage(f_img, canvas.renderAll.bind(canvas), {
             scaleX: scaleFactor,
             scaleY: scaleFactor
-        });
-          canvas.setWidth(f_img.width*scaleFactor);
-          canvas.setHeight(f_img.height*scaleFactor);
+          });
+          canvas.setWidth(f_img.width * scaleFactor);
+          canvas.setHeight(f_img.height * scaleFactor);
 
           canvas.renderAll();
-          console.log(canvas.getWidth());
           resolve();
         };
-        console.log(backgroundImageURL);
         image.src = backgroundImageURL;
-
-
-      });
+      }
+    );
   }
 
   public changeSelectedObjectsFillColor(color: string): void {
@@ -380,7 +367,7 @@ export class CanvasManagerService {
   }
 
   public unselectAndReselectObjects(): void {
-/*     const activeObjects = this.canvas.getActiveObjects();
+    /*     const activeObjects = this.canvas.getActiveObjects();
 
     if (activeObjects) {
       this.canvas.discardActiveObject();
@@ -473,7 +460,6 @@ export class CanvasManagerService {
   } */
 
   public cropImage(): void {
-
     const left = this.cropRectangle.left;
     const top = this.cropRectangle.top;
 
@@ -482,11 +468,31 @@ export class CanvasManagerService {
     const width = this.cropRectangle.width;
     const height = this.cropRectangle.height;
 
-    this.canvas.backgroundImage.left -= left;
-    this.canvas.backgroundImage.top -= top;
+    const container = document.getElementsByClassName(
+      'div-canvas-container'
+    )[0];
 
-    this.canvas.setWidth(width);
-    this.canvas.setHeight(height);
+    let canvasWidth = container.clientWidth;
+    let canvasHeight = container.clientHeight;
+
+    let canvasAspect = canvasWidth / canvasHeight;
+    let imgAspect = width / height;
+    let scaleFactor;
+
+    if (canvasAspect <= imgAspect) {
+      scaleFactor = canvasWidth / width;
+    } else {
+      scaleFactor = canvasHeight / height;
+    }
+
+    this.canvas.setWidth(width * scaleFactor);
+    this.canvas.setHeight(height * scaleFactor);
+
+    this.canvas.backgroundImage.scaleX *= scaleFactor;
+    this.canvas.backgroundImage.scaleY *= scaleFactor;
+
+    this.canvas.backgroundImage.left -= left * scaleFactor;
+    this.canvas.backgroundImage.top -= top - scaleFactor;
 
     this.canvas.selectable = true;
     this.canvas.selection = true;
