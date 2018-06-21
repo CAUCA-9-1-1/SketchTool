@@ -201,25 +201,68 @@ export class CanvasManagerService {
     );
   }
 
-  public setBackgroundFromURL(backgroundImageURL: string, scale: number): Promise<void> {
+  public setBackgroundFromURL(
+    backgroundImageURL: string,
+    scale: number
+  ): Promise<void> {
     const canvas = this.canvas;
 
-    return new Promise((resolve, reject): void => {
-      const image = new Image();
-      image.onload = function (img) {
-        const fabricImage = new fabric.Image(image, {});
-        canvas.setWidth(fabricImage.width * scale);
-        canvas.setHeight(fabricImage.height * scale);
-      };
-      image.src = backgroundImageURL;
+    const container = document.getElementsByClassName("div-canvas-container")[0];
 
-      this.canvas.setBackgroundImage(backgroundImageURL, this.canvas.renderAll.bind(this.canvas), {
-        backgroundImageStretch: false,
-        scaleX: scale,
-        scaleY: scale
+    canvas.setWidth(container.clientWidth);
+    canvas.setHeight(container.clientHeight);
+
+    return new Promise(
+      (resolve, reject): void => {
+        if (backgroundImageURL == null) return reject();
+        const image = new Image();
+        image.onload = function() {
+          console.log('ON LOAD');
+
+
+
+          const f_img = new fabric.Image(image, {
+          });
+
+           let canvasWidth = canvas.getWidth();
+          let canvasHeight = canvas.getHeight();
+
+          console.log('SCALING');
+          console.log(canvasWidth);
+          console.log(canvasHeight);
+
+          let canvasAspect = canvasWidth / canvasHeight;
+          let imgAspect = f_img.width / f_img.height;
+          let left, top, scaleFactor;
+
+          if (canvasAspect >= imgAspect) {
+              scaleFactor = canvasWidth / f_img.width;
+              left = 0;
+              top = -((f_img.height * scaleFactor) - canvasHeight) / 2;
+          } else {
+              scaleFactor = canvasHeight / f_img.height;
+              top = 0;
+              left = -((f_img.width * scaleFactor) - canvasWidth) / 2;
+          }
+
+          console.log(scaleFactor);
+
+
+          canvas.setBackgroundImage(f_img, canvas.renderAll.bind(canvas), {
+            left: left,
+            top: top,
+            scaleX: scaleFactor,
+            scaleY: scaleFactor
+        });
+          canvas.renderAll();
+          console.log(canvas.getWidth());
+          resolve();
+        };
+        console.log(backgroundImageURL);
+        image.src = backgroundImageURL;
+
+
       });
-      resolve();
-    });
   }
 
   public changeSelectedObjectsFillColor(color: string): void {
