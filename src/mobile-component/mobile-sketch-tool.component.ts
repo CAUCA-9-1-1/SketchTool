@@ -153,7 +153,7 @@ export class MobileSketchToolComponent implements OnInit {
       title: 'Ajouter une forme',
       buttons: [
         {
-          text: '\uf0c8',
+          text: '\uf0c8   Rectangle',
           handler: () => {
             this.canvasManagerService.addGeometricShape(
               this.strokeColor,
@@ -163,7 +163,7 @@ export class MobileSketchToolComponent implements OnInit {
           }
         },
         {
-          text: '\uf0d8',
+          text: '\uf0d8   Triangle',
           handler: () => {
             this.canvasManagerService.addGeometricShape(
               this.strokeColor,
@@ -173,7 +173,7 @@ export class MobileSketchToolComponent implements OnInit {
           }
         },
         {
-          text: '\uf111',
+          text: '\uf111   Cercle',
           handler: () => {
             this.canvasManagerService.addGeometricShape(
               this.strokeColor,
@@ -183,7 +183,7 @@ export class MobileSketchToolComponent implements OnInit {
           }
         },
         {
-          text: '\uf068',
+          text: '\uf068   Ligne',
           handler: () => {
             this.canvasManagerService.addGeometricShape(
               this.strokeColor,
@@ -193,7 +193,7 @@ export class MobileSketchToolComponent implements OnInit {
           }
         },
         {
-          text: '\uf067',
+          text: '\uf067   Croix',
           handler: () => {
             this.canvasManagerService.addGeometricShape(
               this.strokeColor,
@@ -203,7 +203,7 @@ export class MobileSketchToolComponent implements OnInit {
           }
         },
         {
-          text: '\uf031',
+          text: '\uf031   Texte',
           handler: () => {
             this.canvasManagerService.addText(this.strokeColor, '');
           }
@@ -218,31 +218,31 @@ export class MobileSketchToolComponent implements OnInit {
       title: 'Édition',
       buttons: [
         {
-          text: '\uf125',
+          text: '\uf125 \u0020 Rogner',
           handler: () => {
             this.crop();
           }
         },
         {
-          text: '\uf247',
+          text: '\uf247   Grouper',
           handler: () => {
             this.group();
           }
         },
         {
-          text: '\uf0de',
+          text: '\uf0de   Avancer',
           handler: () => {
             this.bringFoward();
           }
         },
         {
-          text: '\uf0dd',
+          text: '\uf0dd   Reculer',
           handler: () => {
             this.sendToBack();
           }
         },
         {
-          text: '\uf2ed',
+          text: '\uf1f8   Supprimer',
           handler: () => {
             this.deleteSelection();
           }
@@ -266,16 +266,20 @@ export class MobileSketchToolComponent implements OnInit {
         "'" + this.iconsPath +
         images[i] +
         "'" +
-        ') no-repeat !important;padding-left:80px;height:80px}';
+        ') no-repeat !important;padding-left:50px !important;height:80px}';
       document.getElementsByTagName('head')[0].appendChild(style);
       actionSheetStyles.push(style);
       buttons.push({
         role: 'destructive',
-        cssClass: 'customCSSClass' + i
+        text: images[i],
+        cssClass: 'customCSSClass' + i,
+        handler: () => {
+          this.addImage(images[i]);
+        }
       });
     }
     let actionSheet = this.actionSheetCtrl.create({
-      title: 'Ajouter un pictogramme.',
+      title: 'Ajouter un pictogramme',
       buttons: buttons
     });
    actionSheet.onDidDismiss(() => {

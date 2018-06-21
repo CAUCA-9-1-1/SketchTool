@@ -14,26 +14,33 @@
 </div>
 
 <ion-toolbar>
+    <div class="div-edit-toolbar">
+        <button
+            ion-button
+            large
+            [clear]="true"
+            (click)="presentShapeActionSheet()"
+        >
+            <i class="fa fa-square" id="icon"></i>
+        </button>
 
-    <button
-        ion-button
-        (click)="presentShapeActionSheet()"
-    >
-        Formes
-    </button>
+        <button
+            ion-button
+            large
+            [clear]="true"
+            (click)="presentPictogramsActionSheet()"
+        >
+            <i class="fa fa-image" id="icon"></i>
+        </button>
 
-    <button
-        ion-button
-        (click)="presentPictogramsActionSheet()"
-    >
-        Pictogrammes
-    </button>
-
-    <button
-        ion-button
-        (click)="presentEditActionSheet()"
-    >
-        Édition
-    </button>
+        <button
+            ion-button
+            large
+            [clear]="true"
+            (click)="presentEditActionSheet()"
+        >
+            <i class="fa fa-edit" id="icon"></i>
+        </button>
+    </div>
 
 </ion-toolbar>
