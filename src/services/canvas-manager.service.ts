@@ -235,7 +235,7 @@ export class CanvasManagerService {
           let imgAspect = f_img.width / f_img.height;
           let left, top, scaleFactor;
 
-          if (canvasAspect >= imgAspect) {
+          if (canvasAspect <= imgAspect) {
               scaleFactor = canvasWidth / f_img.width;
               left = 0;
               top = -((f_img.height * scaleFactor) - canvasHeight) / 2;
@@ -249,11 +249,12 @@ export class CanvasManagerService {
 
 
           canvas.setBackgroundImage(f_img, canvas.renderAll.bind(canvas), {
-            left: left,
-            top: top,
             scaleX: scaleFactor,
             scaleY: scaleFactor
         });
+          canvas.setWidth(f_img.width*scaleFactor);
+          canvas.setHeight(f_img.height*scaleFactor);
+
           canvas.renderAll();
           console.log(canvas.getWidth());
           resolve();
@@ -379,7 +380,7 @@ export class CanvasManagerService {
   }
 
   public unselectAndReselectObjects(): void {
-    const activeObjects = this.canvas.getActiveObjects();
+/*     const activeObjects = this.canvas.getActiveObjects();
 
     if (activeObjects) {
       this.canvas.discardActiveObject();
@@ -387,7 +388,7 @@ export class CanvasManagerService {
       const sel = new fabric.ActiveSelection(activeObjects, this.canvas);
       this.canvas.setActiveObject(sel);
       this.canvas.requestRenderAll();
-    }
+    } */
   }
 
   public addSelectionRectangle(): void {
@@ -406,7 +407,7 @@ export class CanvasManagerService {
     this.canvas.add(this.cropRectangle);
   }
 
-  public cropImage(): void {
+  /* public cropImage(): void {
     const left = this.cropRectangle.left;
     const top = this.cropRectangle.top;
 
@@ -430,7 +431,7 @@ export class CanvasManagerService {
     this.canvas.renderAll();
   }
 
-  public ajustCropRectangle(event: MouseEvent): boolean {
+  public ajustCropRectangle(event): boolean {
     const x = Math.min(event.layerX, this.mouse[0]),
       y = Math.min(event.layerY, this.mouse[1]),
       w = Math.abs(event.layerX - this.mouse[0]),
@@ -451,7 +452,7 @@ export class CanvasManagerService {
     return true;
   }
 
-  public startSelectingCropRectangle(event: MouseEvent): void {
+  public startSelectingCropRectangle(event): void {
     this.pos[0] = this.canvas.left;
     this.pos[1] = this.canvas.top;
 
@@ -461,6 +462,79 @@ export class CanvasManagerService {
 
     this.mouse[0] = event.layerX;
     this.mouse[1] = event.layerY;
+
+    this.canvas.renderAll();
+    this.cropRectangle.visible = true;
+    this.canvas.bringToFront(this.cropRectangle);
+  }
+
+  public disableSelection() {
+    this.canvas.selection = false;
+  } */
+
+  public cropImage(): void {
+
+    const left = this.cropRectangle.left;
+    const top = this.cropRectangle.top;
+
+    this.moveAllObjectsInCanvas(-1 * left, -1 * top);
+
+    const width = this.cropRectangle.width;
+    const height = this.cropRectangle.height;
+
+    this.canvas.backgroundImage.left -= left;
+    this.canvas.backgroundImage.top -= top;
+
+    this.canvas.setWidth(width);
+    this.canvas.setHeight(height);
+
+    this.canvas.selectable = true;
+    this.canvas.selection = true;
+    this.cropRectangle.visible = false;
+
+    this.canvas.remove(this.cropRectangle);
+
+    this.canvas.renderAll();
+  }
+
+  public ajustCropRectangle(event): boolean {
+    let touch = event.touches[0];
+
+    var rect = event.target.getBoundingClientRect();
+
+    const x = Math.min(touch.clientX - rect.left, this.mouse[0]),
+      y = Math.min(touch.clientY - rect.top, this.mouse[1]),
+      w = Math.abs(touch.clientX - rect.left - this.mouse[0]),
+      h = Math.abs(touch.clientY - rect.top - this.mouse[1]);
+
+    if (!w || !h) {
+      return false;
+    }
+
+    this.cropRectangle
+      .set('top', y)
+      .set('left', x)
+      .set('width', w)
+      .set('height', h);
+
+    this.canvas.renderAll();
+
+    return true;
+  }
+
+  public startSelectingCropRectangle(event): void {
+    this.pos[0] = this.canvas.left;
+    this.pos[1] = this.canvas.top;
+
+    let touch = event.touches[0];
+    var rect = event.target.getBoundingClientRect();
+
+    this.cropRectangle.left = touch.clientX - rect.left;
+    this.cropRectangle.top = touch.clientY - rect.top;
+    this.cropRectangle.setCoords();
+
+    this.mouse[0] = touch.clientX - rect.left;
+    this.mouse[1] = touch.clientY - rect.top;
 
     this.canvas.renderAll();
     this.cropRectangle.visible = true;

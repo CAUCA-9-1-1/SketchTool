@@ -4,10 +4,13 @@
 
 <div
     class="div-canvas-container"
-    appCanvasDirective
-    (mouseDown)="mouseDown($event)"
-    (mouseMove)="mouseMove($event)"
-    (mouseUp)="mouseUp($event)"
+    (touchstart)="mouseDown($event)"
+    (touchmove)="mouseMove($event)"
+    (touchend)="mouseUp($event)"
+
+    (mousedown)="mouseDown($event)"
+    (mousemove)="mouseMove($event)"
+    (mouseup)="mouseUp($event)"
 >
     <canvas id="canvas"></canvas>
 

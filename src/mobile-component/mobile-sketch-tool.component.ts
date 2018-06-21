@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnChanges } from '@angular/core';
 import { ActionSheetController } from 'ionic-angular';
 
 import { AvailableGeometricShape } from './../constants/available-geometric-shapes';
@@ -14,7 +14,7 @@ const Black = '#000000';
   ],
   providers: [CanvasManagerService]
 })
-export class MobileSketchToolComponent implements OnInit {
+export class MobileSketchToolComponent implements OnInit, OnChanges {
   public fillColor: string;
   public strokeColor: string;
   public shape: string;
@@ -24,9 +24,7 @@ export class MobileSketchToolComponent implements OnInit {
   public isCropping: boolean;
   public isLastImage: boolean;
 
-  public shapePlaceholder = 'Formes';
-  public iconPlaceholder = 'Icones';
-  public editPlaceholder = 'Édition';
+  private isLoaded: boolean;
 
   @Input() public imgUrl: string;
   @Input() public iconsPath: string;
@@ -40,12 +38,22 @@ export class MobileSketchToolComponent implements OnInit {
     this.isDrawing = false;
     this.isCropping = false;
     this.isLastImage = false;
+    this.isLoaded = false;
   }
 
   ngOnInit() {
     this.canvasManagerService.emptyCanvas();
     this.canvasManagerService.setBackgroundFromURL(this.imgUrl, 0.8);
     this.isDrawing = false;
+    this.isLoaded = true;
+  }
+
+  ngOnChanges() {
+    if (this.isLoaded) {
+      this.canvasManagerService.emptyCanvas();
+      this.canvasManagerService.setBackgroundFromURL(this.imgUrl, 0.8);
+      this.isDrawing = false;
+    }
   }
 
   public addText() {
@@ -107,6 +115,7 @@ export class MobileSketchToolComponent implements OnInit {
     this.isCropping = true;
     this.canvasManagerService.disableSelection();
     this.canvasManagerService.addSelectionRectangle();
+    console.log('Crop');
   }
 
   public deleteSelection() {
@@ -114,21 +123,24 @@ export class MobileSketchToolComponent implements OnInit {
   }
 
   public mouseUp(event) {
+    console.log('up');
     if (this.isCropping) {
-      this.canvasManagerService.cropImage();
       this.isCropping = false;
+      this.canvasManagerService.cropImage();
     } else {
       this.canvasManagerService.unselectAndReselectObjects();
     }
   }
 
   public mouseMove(event) {
+    console.log('move');
     if (this.isCropping) {
       this.canvasManagerService.ajustCropRectangle(event);
     }
   }
 
   public mouseDown(event) {
+    console.log('down');
     if (this.isCropping) {
       this.canvasManagerService.startSelectingCropRectangle(event);
     }
@@ -263,10 +275,11 @@ export class MobileSketchToolComponent implements OnInit {
         '.customCSSClass' +
         i +
         '{background: url(' +
-        "'" + this.iconsPath +
+        "'" +
+        this.iconsPath +
         images[i] +
         "'" +
-        ') no-repeat !important;padding-left:50px !important;height:80px}';
+        ') no-repeat !important;padding-left:50px !important;height:80px; background-position: left center !important;}';
       document.getElementsByTagName('head')[0].appendChild(style);
       actionSheetStyles.push(style);
       buttons.push({
@@ -282,13 +295,11 @@ export class MobileSketchToolComponent implements OnInit {
       title: 'Ajouter un pictogramme',
       buttons: buttons
     });
-   actionSheet.onDidDismiss(() => {
+    actionSheet.onDidDismiss(() => {
       // Don't forget to delete css styles on close of actionSheet:
       for (let i = 0; i < actionSheetStyles.length; i++) {
         if (actionSheetStyles[i].parentNode != null)
-          actionSheetStyles[i].parentNode.removeChild(
-            actionSheetStyles[i]
-          );
+          actionSheetStyles[i].parentNode.removeChild(actionSheetStyles[i]);
       }
     });
 
