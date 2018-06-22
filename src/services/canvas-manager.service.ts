@@ -394,31 +394,8 @@ export class CanvasManagerService {
     this.canvas.add(this.cropRectangle);
   }
 
-  /* public cropImage(): void {
-    const left = this.cropRectangle.left;
-    const top = this.cropRectangle.top;
 
-    this.moveAllObjectsInCanvas(-1 * left, -1 * top);
-
-    const width = this.cropRectangle.width;
-    const height = this.cropRectangle.height;
-
-    this.canvas.backgroundImage.left -= left;
-    this.canvas.backgroundImage.top -= top;
-
-    this.canvas.setWidth(width);
-    this.canvas.setHeight(height);
-
-    this.canvas.selectable = true;
-    this.canvas.selection = true;
-    this.cropRectangle.visible = false;
-
-    this.canvas.remove(this.cropRectangle);
-
-    this.canvas.renderAll();
-  }
-
-  public ajustCropRectangle(event): boolean {
+  public ajustCropRectanglFromMouse(event: MouseEvent): boolean {
     const x = Math.min(event.layerX, this.mouse[0]),
       y = Math.min(event.layerY, this.mouse[1]),
       w = Math.abs(event.layerX - this.mouse[0]),
@@ -439,7 +416,7 @@ export class CanvasManagerService {
     return true;
   }
 
-  public startSelectingCropRectangle(event): void {
+  public startSelectingCropRectangleFromMouse(event: MouseEvent): void {
     this.pos[0] = this.canvas.left;
     this.pos[1] = this.canvas.top;
 
@@ -455,15 +432,11 @@ export class CanvasManagerService {
     this.canvas.bringToFront(this.cropRectangle);
   }
 
-  public disableSelection() {
-    this.canvas.selection = false;
-  } */
-
   public cropImage(): void {
     const left = this.cropRectangle.left;
     const top = this.cropRectangle.top;
 
-    this.moveAllObjectsInCanvas(-1 * left, -1 * top);
+
 
     const width = this.cropRectangle.width;
     const height = this.cropRectangle.height;
@@ -491,8 +464,12 @@ export class CanvasManagerService {
     this.canvas.backgroundImage.scaleX *= scaleFactor;
     this.canvas.backgroundImage.scaleY *= scaleFactor;
 
-    this.canvas.backgroundImage.left -= left * scaleFactor;
+    this.canvas.backgroundImage.left -= left;
+    this.canvas.backgroundImage.left *= scaleFactor;
     this.canvas.backgroundImage.top -= top - scaleFactor;
+    this.canvas.backgroundImage.top *= scaleFactor;
+
+    this.moveAllObjectsInCanvas(-1 * left, -1 * top, scaleFactor);
 
     this.canvas.selectable = true;
     this.canvas.selection = true;
@@ -551,11 +528,15 @@ export class CanvasManagerService {
     this.canvas.selection = false;
   }
 
-  private moveAllObjectsInCanvas(x: number, y: number): void {
+  private moveAllObjectsInCanvas(x: number, y: number, scaleFactor: number): void {
     const objects = this.canvas.getObjects();
     for (const obj of objects) {
       obj.left += x;
+      obj.left *= scaleFactor;
+      obj.scaleX *= scaleFactor;
       obj.top += y;
+      obj.scaleY *= scaleFactor;
+      obj.top *= scaleFactor;
       obj.setCoords();
     }
   }
