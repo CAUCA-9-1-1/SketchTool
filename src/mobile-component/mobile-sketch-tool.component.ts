@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnChanges } from '@angular/core';
+import { Component, Input, Output, OnInit, OnChanges, EventEmitter } from '@angular/core';
 import { ActionSheetController } from 'ionic-angular';
 
 import { AvailableGeometricShape } from './../constants/available-geometric-shapes';
@@ -22,42 +22,60 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
   public availableGeometricShapes = AvailableGeometricShape;
   public isDrawing: boolean;
   public isCropping: boolean;
-  public isLastImage: boolean;
 
   private isLoaded: boolean;
+  private lastImage: string;
 
   @Input() public imgUrl: string;
+  @Input() public canvasJson: string;
   @Input() public iconsPath: string;
   @Input() public icons: [string];
 
+  @Output() public json = new EventEmitter<string>();
+
   constructor(
-    private canvasManagerService: CanvasManagerService,
-    public actionSheetCtrl: ActionSheetController
+    public actionSheetCtrl: ActionSheetController,
+    private canvasManagerService: CanvasManagerService
   ) {
+    this.canvasJson = null;
     this.strokeColor = Black;
     this.isDrawing = false;
     this.isCropping = false;
-    this.isLastImage = false;
     this.isLoaded = false;
   }
 
   ngOnInit() {
     this.canvasManagerService.emptyCanvas();
-    this.canvasManagerService.setBackgroundFromURL(this.imgUrl, 0.8);
+    
+    if (this.canvasJson == null) {
+      this.canvasManagerService.setBackgroundFromURL(this.imgUrl, 0.8); 
+      console.log('Loading image');
+      console.log(this.canvasJson);  
+    } else {
+      this.canvasManagerService.loadfromJson(JSON.stringify(this.canvasJson));
+    }
     this.isDrawing = false;
     this.isLoaded = true;
+    this.lastImage = this.imgUrl;
   }
 
   ngOnChanges() {
     if (this.isLoaded) {
       this.canvasManagerService.emptyCanvas();
-      this.canvasManagerService.setBackgroundFromURL(this.imgUrl, 0.8);
-      this.isDrawing = false;
+      if (this.lastImage == this.imgUrl) {
+        this.canvasManagerService.setBackgroundFromURL(this.imgUrl, 0.8);
+        this.isDrawing = false;
+        this.computeJson();
+      } else{
+        this.canvasManagerService.loadfromJson(JSON.stringify(this.canvasJson));
+        console.log('Loading from json.');    
+      }
     }
   }
 
   public addText() {
     this.canvasManagerService.addText(this.strokeColor, ' ');
+    this.computeJson();
   }
 
   public addShape(shape: string) {
@@ -66,16 +84,19 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
       this.fillColor,
       AvailableGeometricShape[shape]
     );
+    this.computeJson();
   }
 
   public addImage(source: string) {
     if (!this.isDrawing) {
       this.canvasManagerService.addImage(this.iconsPath + source);
     }
+    this.computeJson();
   }
 
   public changeFillColor() {
     this.canvasManagerService.changeSelectedObjectsFillColor(this.fillColor);
+    this.computeJson();
   }
 
   public changeStrokeColor() {
@@ -83,6 +104,7 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
       this.strokeColor
     );
     this.canvasManagerService.setFreeDrawingBrushColor(this.strokeColor);
+    this.computeJson();
   }
 
   public bringFoward() {
@@ -115,49 +137,42 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
     this.isCropping = true;
     this.canvasManagerService.disableSelection();
     this.canvasManagerService.addSelectionRectangle();
-    console.log('Crop');
+    this.computeJson();
   }
 
   public deleteSelection() {
     this.canvasManagerService.deleteSelectedObjects();
+    this.computeJson();
   }
 
   public mouseUp(event) {
-    console.log('up');
     if (this.isCropping) {
       this.isCropping = false;
       this.canvasManagerService.cropImage();
     } else {
       this.canvasManagerService.unselectAndReselectObjects();
     }
+    this.computeJson();
   }
 
   public mouseMove(event) {
-    console.log('move');
     if (this.isCropping) {
       this.canvasManagerService.ajustCropRectangle(event);
     }
   }
 
   public mouseDown(event) {
-    console.log('down');
     if (this.isCropping) {
       this.canvasManagerService.startSelectingCropRectangle(event);
     }
   }
 
-  public nextImage() {
-    this.canvasManagerService.emptyCanvas();
-    this.canvasManagerService.setBackgroundFromURL(
-      'assets/demo/IMG_3739.jpg',
-      1.45
-    );
-    this.isDrawing = false;
-    this.isLastImage = true;
-  }
-
   public group() {
     this.canvasManagerService.groupSelectedObjects();
+  }
+
+  private computeJson() {
+    this.json.emit(this.canvasManagerService.jsonFromCanvas());
   }
 
   public presentShapeActionSheet() {
