@@ -4,6 +4,12 @@ import { fabric } from 'fabric';
 import { AvailableGeometricShape } from './../constants/available-geometric-shapes';
 import { SHAPE_DATA } from './../constants/shape-data';
 
+interface ScaleData {
+  scaleFactor: number;
+  left: number;
+  top: number;
+}
+
 @Injectable()
 export class CanvasManagerService {
   private canvas;
@@ -206,44 +212,24 @@ export class CanvasManagerService {
     scale: number
   ): Promise<void> {
     const canvas = this.canvas;
-
-    const container = document.getElementsByClassName(
-      'div-canvas-container'
-    )[0];
-
-    canvas.setWidth(container.clientWidth);
-    canvas.setHeight(container.clientHeight);
+    const resize = this.resizeCanvasAndComputeScaleFactor;
 
     return new Promise(
       (resolve, reject): void => {
-        if (backgroundImageURL == null) return reject();
+        if (backgroundImageURL == null) {
+          return reject();
+        }
         const image = new Image();
         image.onload = function() {
           const f_img = new fabric.Image(image, {});
 
-          let canvasWidth = canvas.getWidth();
-          let canvasHeight = canvas.getHeight();
-
-          let canvasAspect = canvasWidth / canvasHeight;
-          let imgAspect = f_img.width / f_img.height;
-          let left, top, scaleFactor;
-
-          if (canvasAspect <= imgAspect) {
-            scaleFactor = canvasWidth / f_img.width;
-            left = 0;
-            top = -(f_img.height * scaleFactor - canvasHeight) / 2;
-          } else {
-            scaleFactor = canvasHeight / f_img.height;
-            top = 0;
-            left = -(f_img.width * scaleFactor - canvasWidth) / 2;
-          }
-
+          const scaleData = resize(f_img, canvas);
           canvas.setBackgroundImage(f_img, canvas.renderAll.bind(canvas), {
-            scaleX: scaleFactor,
-            scaleY: scaleFactor
+            scaleX: scaleData.scaleFactor,
+            scaleY: scaleData.scaleFactor
           });
-          canvas.setWidth(f_img.width * scaleFactor);
-          canvas.setHeight(f_img.height * scaleFactor);
+          canvas.setWidth(f_img.width * scaleData.scaleFactor);
+          canvas.setHeight(f_img.height * scaleData.scaleFactor);
 
           canvas.renderAll();
           resolve();
@@ -251,6 +237,42 @@ export class CanvasManagerService {
         image.src = backgroundImageURL;
       }
     );
+  }
+
+  private resizeCanvasAndComputeScaleFactor(f_img: fabric.Image, canvas: fabric.Canvas): ScaleData {
+    const container = document.getElementsByClassName(
+      'div-canvas-container'
+    )[0];
+
+    canvas.setWidth(container.clientWidth);
+    canvas.setHeight(container.clientHeight);
+
+    const canvasWidth = canvas.getWidth();
+    const canvasHeight = canvas.getHeight();
+
+    const canvasAspect = canvasWidth / canvasHeight;
+    const imgAspect = f_img.width / f_img.height;
+    let left, top, scaleFactor;
+
+    if (canvasAspect <= imgAspect) {
+      scaleFactor = canvasWidth / f_img.width;
+      left = 0;
+      top = -(f_img.height * scaleFactor - canvasHeight) / 2;
+    } else {
+      scaleFactor = canvasHeight / f_img.height;
+      top = 0;
+      left = -(f_img.width * scaleFactor - canvasWidth) / 2;
+    }
+    return {scaleFactor: scaleFactor, left: left, top: top};
+  }
+
+  private resizeCanvasToFitScreen(canvas: fabric.Canvas) {
+    const container = document.getElementsByClassName(
+      'div-canvas-container'
+    )[0];
+
+    canvas.setWidth(container.clientWidth);
+    canvas.setHeight(container.clientHeight);
   }
 
   public changeSelectedObjectsFillColor(color: string): void {
@@ -340,7 +362,8 @@ export class CanvasManagerService {
     return this.canvas.toJSON();
   }
 
-  public loadfromJson(json: string): Promise<void> {
+  public loadfromJson(json: JSON): Promise<void> {
+    this.resizeCanvasToFitScreen(this.canvas);
     return new Promise(
       (resolve, reject): void => {
         this.canvas.loadFromJSON(json, this.canvas.renderAll.bind(this.canvas));
@@ -445,11 +468,11 @@ export class CanvasManagerService {
       'div-canvas-container'
     )[0];
 
-    let canvasWidth = container.clientWidth;
-    let canvasHeight = container.clientHeight;
+    const canvasWidth = container.clientWidth;
+    const canvasHeight = container.clientHeight;
 
-    let canvasAspect = canvasWidth / canvasHeight;
-    let imgAspect = width / height;
+    const canvasAspect = canvasWidth / canvasHeight;
+    const imgAspect = width / height;
     let scaleFactor;
 
     if (canvasAspect <= imgAspect) {
@@ -481,9 +504,9 @@ export class CanvasManagerService {
   }
 
   public ajustCropRectangle(event): boolean {
-    let touch = event.touches[0];
+    const touch = event.touches[0];
 
-    var rect = event.target.getBoundingClientRect();
+    const rect = event.target.getBoundingClientRect();
 
     const x = Math.min(touch.clientX - rect.left, this.mouse[0]),
       y = Math.min(touch.clientY - rect.top, this.mouse[1]),
@@ -509,8 +532,8 @@ export class CanvasManagerService {
     this.pos[0] = this.canvas.left;
     this.pos[1] = this.canvas.top;
 
-    let touch = event.touches[0];
-    var rect = event.target.getBoundingClientRect();
+    const touch = event.touches[0];
+    const rect = event.target.getBoundingClientRect();
 
     this.cropRectangle.left = touch.clientX - rect.left;
     this.cropRectangle.top = touch.clientY - rect.top;
