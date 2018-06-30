@@ -5,6 +5,7 @@ import { AvailableGeometricShape } from './../constants/available-geometric-shap
 import { CanvasManagerService } from './../services/canvas-manager.service';
 
 const Black = '#000000';
+const Transparent = '#00000000';
 
 @Component({
   selector: 'lib-mobile-sketch-tool',
@@ -39,6 +40,7 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
   ) {
     this.canvasJson = null;
     this.strokeColor = Black;
+    this.fillColor = Transparent;
     this.isDrawing = false;
     this.isCropping = false;
     this.isLoaded = false;
@@ -52,7 +54,7 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
       console.log('Loading image');
       console.log(this.canvasJson);  
     } else {
-      this.canvasManagerService.loadfromJson(JSON.stringify(this.canvasJson));
+      this.canvasManagerService.loadfromJson(JSON.parse(this.canvasJson));
     }
     this.isDrawing = false;
     this.isLoaded = true;
@@ -60,17 +62,14 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges() {
-    if (this.isLoaded) {
+    if (this.isLoaded && this.lastImage != this.imgUrl) {
       this.canvasManagerService.emptyCanvas();
-      if (this.lastImage == this.imgUrl) {
-        this.canvasManagerService.setBackgroundFromURL(this.imgUrl, 0.8);
-        this.isDrawing = false;
-        this.computeJson();
-      } else{
-        this.canvasManagerService.loadfromJson(JSON.stringify(this.canvasJson));
-        console.log('Loading from json.');    
-      }
-    }
+      this.canvasManagerService.setBackgroundFromURL(this.imgUrl, 0.8);
+      this.isDrawing = false;
+      this.computeJson();
+      console.log('REFRESH');
+      this.lastImage = this.imgUrl;
+    } 
   }
 
   public addText() {
