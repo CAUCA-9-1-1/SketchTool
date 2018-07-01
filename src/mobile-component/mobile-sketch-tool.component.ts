@@ -15,7 +15,7 @@ const Transparent = '#00000000';
   ],
   providers: [CanvasManagerService]
 })
-export class MobileSketchToolComponent implements OnInit, OnChanges {
+export class MobileSketchToolComponent implements OnInit/*, OnChanges*/ {
   public fillColor: string;
   public strokeColor: string;
   public shape: string;
@@ -26,6 +26,10 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
 
   private isLoaded: boolean;
   private lastImage: string;
+  private isUndoAvailable: boolean;
+
+  private currentJson;
+  private lastJson;
 
   @Input() public imgUrl: string;
   @Input() public canvasJson: string;
@@ -38,12 +42,12 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
     public actionSheetCtrl: ActionSheetController,
     private canvasManagerService: CanvasManagerService
   ) {
-    this.canvasJson = null;
     this.strokeColor = Black;
     this.fillColor = Transparent;
     this.isDrawing = false;
     this.isCropping = false;
     this.isLoaded = false;
+    this.isUndoAvailable = false;
   }
 
   ngOnInit() {
@@ -51,10 +55,10 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
     
     if (this.canvasJson == null) {
       this.canvasManagerService.setBackgroundFromURL(this.imgUrl, 0.8); 
-      console.log('Loading image');
-      console.log(this.canvasJson);  
     } else {
       this.canvasManagerService.loadfromJson(JSON.parse(this.canvasJson));
+      this.lastJson = this.canvasJson;
+      this.currentJson = this.canvasJson;
     }
     this.isDrawing = false;
     this.isLoaded = true;
@@ -67,7 +71,6 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
       this.canvasManagerService.setBackgroundFromURL(this.imgUrl, 0.8);
       this.isDrawing = false;
       this.computeJson();
-      console.log('REFRESH');
       this.lastImage = this.imgUrl;
     } 
   }
@@ -137,6 +140,7 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
     this.canvasManagerService.disableSelection();
     this.canvasManagerService.addSelectionRectangle();
     this.computeJson();
+    this.isUndoAvailable = true;
   }
 
   public deleteSelection() {
@@ -170,8 +174,17 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
     this.canvasManagerService.groupSelectedObjects();
   }
 
+  public undo() {
+    this.canvasManagerService.loadfromJson(this.lastJson).then(() => {
+      this.computeJson();
+    })
+  }
+
   private computeJson() {
-    this.json.emit(this.canvasManagerService.jsonFromCanvas());
+    this.lastJson = this.currentJson;
+    this.currentJson = this.canvasManagerService.jsonFromCanvas();
+    this.json.emit(this.currentJson);
+    this.isUndoAvailable = false;
   }
 
   public presentShapeActionSheet() {

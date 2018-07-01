@@ -10,7 +10,6 @@
 
 .edit-bar {
   position: absolute;
-  bottom: 10px;
   width: 100%;
   background-color: whitesmoke;
 }
@@ -24,6 +23,15 @@
 .action-sheet-button {
   font-family: FontAwesome, Arial !important;
   text-align: left, right !important;
+}
+
+.colorPicker {
+  width: 25px;
+  height: 25px;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 10px;
+  top: 20px;
 }
 
 #icon {
