@@ -7,7 +7,6 @@
     (touchstart)="mouseDown($event)"
     (touchmove)="mouseMove($event)"
     (touchend)="mouseUp($event)"
-
     (mousedown)="mouseDown($event)"
     (mousemove)="mouseMove($event)"
     (mouseup)="mouseUp($event)"
@@ -24,7 +23,10 @@
             [clear]="true"
             (click)="presentShapeActionSheet()"
         >
-            <i class="fa fa-square" id="icon"></i>
+            <i
+                class="fa fa-square"
+                id="icon"
+            ></i>
         </button>
 
         <button
@@ -33,7 +35,10 @@
             [clear]="true"
             (click)="presentPictogramsActionSheet()"
         >
-            <i class="fa fa-image" id="icon"></i>
+            <i
+                class="fa fa-image"
+                id="icon"
+            ></i>
         </button>
 
         <button
@@ -42,8 +47,39 @@
             [clear]="true"
             (click)="presentEditActionSheet()"
         >
-            <i class="fa fa-edit" id="icon"></i>
+            <i
+                class="fa fa-edit"
+                id="icon"
+            ></i>
         </button>
+
+        <input
+            class="colorPicker"
+            [(colorPicker)]="strokeColor"
+            [style.background]="strokeColor"
+            (colorPickerChange)="changeStrokeColor()"
+        >
+
+        <input
+            class="colorPicker"
+            [(colorPicker)]="fillColor"
+            [style.background]="fillColor"
+            (colorPickerChange)="changeFillColor()"
+        >
+
+        <button
+            ion-button
+            large
+            [clear]="true"
+            (click)="undo()"
+            *ngIf="isUndoAvailable"
+        >
+            <i
+                class="fa fa-undo"
+                id="icon"
+            ></i>
+        </button>
+
     </div>
 
 </ion-toolbar>

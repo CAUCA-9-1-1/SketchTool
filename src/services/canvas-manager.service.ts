@@ -363,7 +363,6 @@ export class CanvasManagerService {
   }
 
   public loadfromJson(json: JSON): Promise<void> {
-    this.resizeCanvasToFitScreen(this.canvas);
     return new Promise(
       (resolve, reject): void => {
         this.canvas.loadFromJSON(json, this.canvas.renderAll.bind(this.canvas));
@@ -458,8 +457,6 @@ export class CanvasManagerService {
   public cropImage(): void {
     const left = this.cropRectangle.left;
     const top = this.cropRectangle.top;
-
-
 
     const width = this.cropRectangle.width;
     const height = this.cropRectangle.height;
