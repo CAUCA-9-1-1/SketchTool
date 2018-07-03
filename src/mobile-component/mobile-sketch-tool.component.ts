@@ -1,42 +1,34 @@
 import { Component, Input, Output, OnInit, OnChanges, EventEmitter } from '@angular/core';
 import { ActionSheetController } from 'ionic-angular';
-
 import { AvailableGeometricShape } from './../constants/available-geometric-shapes';
 import { CanvasManagerService } from './../services/canvas-manager.service';
 
-const Black = '#000000';
+const Black = '#FF000000';
 const Transparent = '#00000000';
 
 @Component({
   selector: 'lib-mobile-sketch-tool',
   templateUrl: './mobile-sketch-tool.component.html',
-  styleUrls: [
-    '/src/lib-sketch-tool/mobile-component/mobile-sketch-tool.component.scss'
-  ],
+  styleUrls: ['/src/lib-sketch-tool/mobile-component/mobile-sketch-tool.component.scss'],
   providers: [CanvasManagerService]
 })
-export class MobileSketchToolComponent implements OnInit/*, OnChanges*/ {
+export class MobileSketchToolComponent implements OnInit, OnChanges {
   public fillColor: string;
   public strokeColor: string;
-  public shape: string;
-
-  public availableGeometricShapes = AvailableGeometricShape;
-  public isDrawing: boolean;
   public isCropping: boolean;
+  public isUndoAvailable: boolean;
 
-  private isLoaded: boolean;
-  private lastImage: string;
-  private isUndoAvailable: boolean;
-
-  private currentJson;
-  private lastJson;
-
-  @Input() public imgUrl: string;
-  @Input() public canvasJson: string;
+  @Input() public imageData: string;
+  @Input() public loadedJson: string;
   @Input() public iconsPath: string;
   @Input() public icons: [string];
 
   @Output() public json = new EventEmitter<string>();
+
+  private isLoaded: boolean;
+  private previousImageData: string;
+  private currentJson: JSON;
+  private previousJson: JSON;
 
   constructor(
     public actionSheetCtrl: ActionSheetController,
@@ -44,7 +36,6 @@ export class MobileSketchToolComponent implements OnInit/*, OnChanges*/ {
   ) {
     this.strokeColor = Black;
     this.fillColor = Transparent;
-    this.isDrawing = false;
     this.isCropping = false;
     this.isLoaded = false;
     this.isUndoAvailable = false;
@@ -52,27 +43,29 @@ export class MobileSketchToolComponent implements OnInit/*, OnChanges*/ {
 
   ngOnInit() {
     this.canvasManagerService.emptyCanvas();
-    
-    if (this.canvasJson == null) {
-      this.canvasManagerService.setBackgroundFromURL(this.imgUrl, 0.8); 
+
+    if (this.loadedJson == null) {
+      this.canvasManagerService.setBackgroundFromURL(this.imageData, 0.8);
     } else {
-      this.canvasManagerService.loadfromJson(JSON.parse(this.canvasJson));
-      this.lastJson = this.canvasJson;
-      this.currentJson = this.canvasJson;
+      this.canvasManagerService.loadfromJson(JSON.parse(this.loadedJson));
+      this.previousJson = JSON.parse(this.loadedJson);
+      this.currentJson = this.previousJson;
     }
-    this.isDrawing = false;
     this.isLoaded = true;
-    this.lastImage = this.imgUrl;
+    this.previousImageData = this.imageData;
   }
 
   ngOnChanges() {
-    if (this.isLoaded && this.lastImage != this.imgUrl) {
+    if (this.isLoaded && this.previousImageData != this.imageData) {
       this.canvasManagerService.emptyCanvas();
-      this.canvasManagerService.setBackgroundFromURL(this.imgUrl, 0.8);
-      this.isDrawing = false;
+      this.canvasManagerService.setBackgroundFromURL(this.imageData, 0.8);
       this.computeJson();
-      this.lastImage = this.imgUrl;
-    } 
+      this.previousImageData = this.imageData;
+    }
+  }
+
+  get hasPictograms(): boolean {
+    return !this.icons;
   }
 
   public addText() {
@@ -90,9 +83,7 @@ export class MobileSketchToolComponent implements OnInit/*, OnChanges*/ {
   }
 
   public addImage(source: string) {
-    if (!this.isDrawing) {
-      this.canvasManagerService.addImage(this.iconsPath + source);
-    }
+    this.canvasManagerService.addImage(this.iconsPath + source);
     this.computeJson();
   }
 
@@ -115,12 +106,6 @@ export class MobileSketchToolComponent implements OnInit/*, OnChanges*/ {
 
   public sendToBack() {
     this.canvasManagerService.sendSelectedObjectsToBack();
-  }
-
-  public draw() {
-    this.isDrawing = !this.isDrawing;
-    this.canvasManagerService.toggleFreeDrawing();
-    this.canvasManagerService.setFreeDrawingBrushColor(this.strokeColor);
   }
 
   public saveImage() {
@@ -175,15 +160,15 @@ export class MobileSketchToolComponent implements OnInit/*, OnChanges*/ {
   }
 
   public undo() {
-    this.canvasManagerService.loadfromJson(this.lastJson).then(() => {
+    this.canvasManagerService.loadfromJson(this.previousJson).then(() => {
       this.computeJson();
-    })
+    });
   }
 
   private computeJson() {
-    this.lastJson = this.currentJson;
+    this.previousJson = this.currentJson;
     this.currentJson = this.canvasManagerService.jsonFromCanvas();
-    this.json.emit(this.currentJson);
+    this.json.emit(JSON.stringify(this.currentJson));
     this.isUndoAvailable = false;
   }
 
@@ -323,7 +308,6 @@ export class MobileSketchToolComponent implements OnInit/*, OnChanges*/ {
       buttons: buttons
     });
     actionSheet.onDidDismiss(() => {
-      // Don't forget to delete css styles on close of actionSheet:
       for (let i = 0; i < actionSheetStyles.length; i++) {
         if (actionSheetStyles[i].parentNode != null)
           actionSheetStyles[i].parentNode.removeChild(actionSheetStyles[i]);
