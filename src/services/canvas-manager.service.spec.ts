@@ -37,7 +37,7 @@ describe('ImageEditionService', () => {
   it('should set image as background', inject(
     [CanvasManagerService],
     (service: CanvasManagerService) => {
-      service.setBackgroundFromURL(testImageURL, 1).then(() => {
+      service.setBackgroundFromURL(testImageURL).then(() => {
         expect(service.canvasBackgroundImage != null);
       });
     }
