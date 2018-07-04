@@ -49,9 +49,6 @@
                 <i class="fa fa-angle-up"></i>
             </button>
 
-            <!-- <input class="colorPicker" [(colorPicker)]="strokeColor" [style.background]="strokeColor" (colorPickerChange)="changeStrokeColor()"
-      /> -->
-
             <div class="separator"></div>
 
             <button (click)="saveImage()">
@@ -103,18 +100,8 @@
                 <i class="fa fa-angle-down"></i>
             </button>
 
-            <!-- <input class="colorPicker" [(colorPicker)]="fillColor" [style.background]="fillColor" (colorPickerChange)="changeFillColor()"
-      /> -->
 
             <div class="separator"></div>
-
-            <button
-                color="accent"
-                (click)="nextImage()"
-                [disabled]="isDrawing || isLastImage"
-            >
-                <i class="fa fa-forward"></i>
-            </button>
 
         </form>
     </div>
@@ -127,18 +114,5 @@
         (mouseUp)="mouseUp($event)"
     >
         <canvas id="canvas"></canvas>
-
-        <div class="pictograms">
-            <ul>
-                <li
-                    *ngFor="let img of pictograms.images"
-                    (click)="addImage(img)"
-                >
-                    <div class="picto">
-                        <img src="{{pictograms.url}}{{img}}">
-                    </div>
-                </li>
-            </ul>
-        </div>
     </div>
 </div>
