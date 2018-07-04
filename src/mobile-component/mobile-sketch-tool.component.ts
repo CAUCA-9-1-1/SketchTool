@@ -4,11 +4,14 @@ import { AvailableGeometricShape } from './../constants/available-geometric-shap
 import { CanvasManagerService } from './../services/canvas-manager.service';
 
 const Black = '#000000';
+const Transparent = '#FF000000';
 
 @Component({
   selector: 'lib-mobile-sketch-tool',
   templateUrl: './mobile-sketch-tool.component.html',
-  styleUrls: ['/src/lib-sketch-tool/mobile-component/mobile-sketch-tool.component.scss'],
+  styleUrls: [
+    '/src/lib-sketch-tool/mobile-component/mobile-sketch-tool.component.scss'
+  ],
   providers: [CanvasManagerService]
 })
 export class MobileSketchToolComponent implements OnInit, OnChanges {
@@ -35,6 +38,7 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
     private canvasManagerService: CanvasManagerService
   ) {
     this.strokeColor = Black;
+    this.fillColor = Transparent;
     this.isCropping = false;
     this.isLoaded = false;
     this.isUndoAvailable = false;
@@ -45,11 +49,12 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
     this.canvasManagerService.emptyCanvas();
 
     if (this.loadedJson == null) {
-      this.canvasManagerService.setBackgroundFromURL(this.imageData, 0.8);
+      this.canvasManagerService.setBackgroundFromURL(this.imageData);
     } else {
-      this.canvasManagerService.loadfromJson(JSON.parse(this.loadedJson));
       this.previousJson = JSON.parse(this.loadedJson);
       this.currentJson = this.previousJson;
+      this.canvasManagerService
+        .loadfromJson(JSON.parse(this.loadedJson));
     }
     this.isLoaded = true;
     this.previousImageData = this.imageData;
@@ -58,7 +63,7 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
   ngOnChanges() {
     if (this.isLoaded && this.previousImageData != this.imageData) {
       this.canvasManagerService.emptyCanvas();
-      this.canvasManagerService.setBackgroundFromURL(this.imageData, 0.8);
+      this.canvasManagerService.setBackgroundFromURL(this.imageData);
       this.computeJson();
       this.previousImageData = this.imageData;
     }
@@ -132,8 +137,6 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
     if (this.isCropping) {
       this.isCropping = false;
       this.canvasManagerService.cropImage();
-    } else {
-      this.canvasManagerService.unselectAndReselectObjects();
     }
     this.computeJson();
   }
@@ -313,9 +316,8 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
     actionSheet.present();
   }
 
-  public onColorClicked(){
+  public onColorClicked() {
     this.isSelectingColor = true;
-
   }
 
   public setColor(color: string) {
