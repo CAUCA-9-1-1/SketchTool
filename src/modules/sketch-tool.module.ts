@@ -10,8 +10,10 @@ import { CanvasClickDirective } from './../directives/canvas-click.directive';
 import { MatSelectModule } from '@angular/material/select';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import {IonicApp, IonicModule} from 'ionic-angular';
+
 @NgModule({
-  imports: [CommonModule, BrowserAnimationsModule, MatSelectModule],
+  imports: [CommonModule, BrowserAnimationsModule, MatSelectModule, IonicModule],
   declarations: [
     CanvasClickDirective,
     WebSketchToolComponent,

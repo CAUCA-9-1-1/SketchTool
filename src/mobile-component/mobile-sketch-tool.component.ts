@@ -9,9 +9,7 @@ const Transparent = '#FF000000';
 @Component({
   selector: 'lib-mobile-sketch-tool',
   templateUrl: './mobile-sketch-tool.component.html',
-  styleUrls: [
-    '/src/lib-sketch-tool/mobile-component/mobile-sketch-tool.component.scss'
-  ],
+  styleUrls: ['./mobile-sketch-tool.component.scss'],
   providers: [CanvasManagerService]
 })
 export class MobileSketchToolComponent implements OnInit, OnChanges {
@@ -61,7 +59,7 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges() {
-    if (this.isLoaded && this.previousImageData != this.imageData) {
+    if (this.isLoaded && this.previousImageData !== this.imageData) {
       this.canvasManagerService.emptyCanvas();
       this.canvasManagerService.setBackgroundFromURL(this.imageData);
       this.computeJson();
