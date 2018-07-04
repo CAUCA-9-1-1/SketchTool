@@ -1,6 +1,6 @@
 {
   "name": "lib-sketch-tool",
-  "version": "0.1.29",
+  "version": "1.0.0",
   "license": "MIT",
   "main": "src/main.ts",
   "scripts": {
