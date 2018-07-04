@@ -2,7 +2,6 @@ import { Component, OnInit, Input, HostListener } from '@angular/core';
 import { forEach } from '@angular/router/src/utils/collection';
 import { CanvasManagerService } from './../services/canvas-manager.service';
 import { AvailableGeometricShape } from './../constants/available-geometric-shapes';
-import { Pictograms } from './../classes/pictograms';
 import { KEY_CODE } from './../constants/key-code';
 import { fabric } from 'fabric';
 
@@ -23,7 +22,6 @@ export class WebSketchToolComponent implements OnInit {
   public isDrawing: boolean;
   public isCropping: boolean;
   public isLastImage: boolean;
-  public pictograms = new Pictograms();
 
   @Input() public imgUrl: string;
 
@@ -36,7 +34,7 @@ export class WebSketchToolComponent implements OnInit {
 
   ngOnInit() {
     this.canvasManagerService.emptyCanvas();
-    this.canvasManagerService.setBackgroundFromURL(this.imgUrl, 0.8);
+    this.canvasManagerService.setBackgroundFromURL(this.imgUrl);
     this.isDrawing = false;
   }
 
@@ -54,7 +52,6 @@ export class WebSketchToolComponent implements OnInit {
 
   public addImage(source: string) {
     if (!this.isDrawing) {
-      this.canvasManagerService.addImage(this.pictograms.url + source);
     }
   }
 
@@ -116,8 +113,6 @@ export class WebSketchToolComponent implements OnInit {
     if (this.isCropping) {
       this.canvasManagerService.cropImage();
       this.isCropping = false;
-    } else {
-      this.canvasManagerService.unselectAndReselectObjects();
     }
   }
 
@@ -131,16 +126,6 @@ export class WebSketchToolComponent implements OnInit {
     if (this.isCropping) {
       this.canvasManagerService.startSelectingCropRectangle(event);
     }
-  }
-
-  public nextImage() {
-    this.canvasManagerService.emptyCanvas();
-    this.canvasManagerService.setBackgroundFromURL(
-      'assets/demo/IMG_3739.jpg',
-      1.45
-    );
-    this.isDrawing = false;
-    this.isLastImage = true;
   }
 
   public group() {
