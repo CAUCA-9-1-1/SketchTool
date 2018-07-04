@@ -23,6 +23,10 @@ export class CanvasManagerService {
     this.pos = [0, 0];
   }
 
+  get backgroundImage() {
+    return this.canvas;
+  }
+
   public emptyCanvas(): void {
     if (this.canvas) {
       this.canvas.dispose();
@@ -35,7 +39,7 @@ export class CanvasManagerService {
   public loadNewImage(backgroundImageURL?: string): void {
     this.emptyCanvas();
     if (backgroundImageURL) {
-      this.setBackgroundFromURL(backgroundImageURL, 1);
+      this.setBackgroundFromURL(backgroundImageURL);
     }
   }
 
@@ -207,10 +211,7 @@ export class CanvasManagerService {
     );
   }
 
-  public setBackgroundFromURL(
-    backgroundImageURL: string,
-    scale: number
-  ): Promise<void> {
+  public setBackgroundFromURL(backgroundImageURL: string): Promise<void> {
     const canvas = this.canvas;
     const resize = this.resizeCanvasAndComputeScaleFactor;
 
@@ -224,12 +225,18 @@ export class CanvasManagerService {
           const f_img = new fabric.Image(image, {});
 
           const scaleData = resize(f_img, canvas);
+
+          /* f_img.scaleX = scaleData.scaleFactor;
+          f_img.scaleY = scaleData.scaleFactor; */
+
           canvas.setBackgroundImage(f_img, canvas.renderAll.bind(canvas), {
             scaleX: scaleData.scaleFactor,
             scaleY: scaleData.scaleFactor
           });
-          canvas.setWidth(f_img.width * scaleData.scaleFactor);
-          canvas.setHeight(f_img.height * scaleData.scaleFactor);
+
+
+         /*  canvas.setWidth(f_img.width * scaleData.scaleFactor);
+          canvas.setHeight(f_img.height * scaleData.scaleFactor); */
 
           canvas.renderAll();
           resolve();
@@ -240,12 +247,12 @@ export class CanvasManagerService {
   }
 
   private resizeCanvasAndComputeScaleFactor(f_img: fabric.Image, canvas: fabric.Canvas): ScaleData {
-    const container = document.getElementsByClassName(
+/*     const container = document.getElementsByClassName(
       'div-canvas-container'
     )[0];
 
     canvas.setWidth(container.clientWidth);
-    canvas.setHeight(container.clientHeight);
+    canvas.setHeight(container.clientHeight); */
 
     const canvasWidth = canvas.getWidth();
     const canvasHeight = canvas.getHeight();
@@ -264,15 +271,6 @@ export class CanvasManagerService {
       left = -(f_img.width * scaleFactor - canvasWidth) / 2;
     }
     return {scaleFactor: scaleFactor, left: left, top: top};
-  }
-
-  private resizeCanvasToFitScreen(canvas: fabric.Canvas) {
-    const container = document.getElementsByClassName(
-      'div-canvas-container'
-    )[0];
-
-    canvas.setWidth(container.clientWidth);
-    canvas.setHeight(container.clientHeight);
   }
 
   public changeSelectedObjectsFillColor(color: string): void {
@@ -358,7 +356,7 @@ export class CanvasManagerService {
     return this.canvas.getObjects().indexOf(activeObject);
   }
 
-  public jsonFromCanvas(): string {
+  public jsonFromCanvas(): JSON {
     return this.canvas.toJSON();
   }
 
@@ -386,18 +384,6 @@ export class CanvasManagerService {
         object.set('dirty', true);
       }
     }
-  }
-
-  public unselectAndReselectObjects(): void {
-    /*     const activeObjects = this.canvas.getActiveObjects();
-
-    if (activeObjects) {
-      this.canvas.discardActiveObject();
-
-      const sel = new fabric.ActiveSelection(activeObjects, this.canvas);
-      this.canvas.setActiveObject(sel);
-      this.canvas.requestRenderAll();
-    } */
   }
 
   public addSelectionRectangle(): void {
@@ -582,20 +568,3 @@ export class CanvasManagerService {
     }
   }
 }
-
-/* // Maintain stroke width when scaling objects
-fabric.Object.prototype.render = function(ctx) {
-  if (!this.stroke || this.strokeWidth === 0) {
-    return;
-  }
-  if (this.shadow && !this.shadow.affectStroke) {
-    this._removeShadow(ctx);
-  }
-  ctx.save();
-  ctx.scale(1 / this.scaleX, 1 / this.scaleY);
-  this._setLineDash(ctx, this.strokeDashArray, this._renderDashedStroke);
-  this._applyPatternGradientTransform(ctx, this.stroke);
-  ctx.stroke();
-  ctx.restore();
-};
- */
