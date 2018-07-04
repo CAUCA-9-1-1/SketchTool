@@ -1,10 +1,9 @@
-import { Component, Input, Output, OnInit, OnChanges, EventEmitter } from '@angular/core';
+import { Component, Input, Output, OnInit, OnChanges, EventEmitter} from '@angular/core';
 import { ActionSheetController } from 'ionic-angular';
 import { AvailableGeometricShape } from './../constants/available-geometric-shapes';
 import { CanvasManagerService } from './../services/canvas-manager.service';
 
-const Black = '#FF000000';
-const Transparent = '#00000000';
+const Black = '#000000';
 
 @Component({
   selector: 'lib-mobile-sketch-tool',
@@ -17,6 +16,7 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
   public strokeColor: string;
   public isCropping: boolean;
   public isUndoAvailable: boolean;
+  public isSelectingColor: boolean;
 
   @Input() public imageData: string;
   @Input() public loadedJson: string;
@@ -35,10 +35,10 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
     private canvasManagerService: CanvasManagerService
   ) {
     this.strokeColor = Black;
-    this.fillColor = Transparent;
     this.isCropping = false;
     this.isLoaded = false;
     this.isUndoAvailable = false;
+    this.isSelectingColor = false;
   }
 
   ngOnInit() {
@@ -84,11 +84,6 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
 
   public addImage(source: string) {
     this.canvasManagerService.addImage(this.iconsPath + source);
-    this.computeJson();
-  }
-
-  public changeFillColor() {
-    this.canvasManagerService.changeSelectedObjectsFillColor(this.fillColor);
     this.computeJson();
   }
 
@@ -308,6 +303,7 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
       buttons: buttons
     });
     actionSheet.onDidDismiss(() => {
+      // Don't forget to delete css styles on close of actionSheet:
       for (let i = 0; i < actionSheetStyles.length; i++) {
         if (actionSheetStyles[i].parentNode != null)
           actionSheetStyles[i].parentNode.removeChild(actionSheetStyles[i]);
@@ -315,5 +311,16 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
     });
 
     actionSheet.present();
+  }
+
+  public onColorClicked(){
+    this.isSelectingColor = true;
+
+  }
+
+  public setColor(color: string) {
+    this.strokeColor = color;
+    this.changeStrokeColor();
+    this.isSelectingColor = false;
   }
 }
