@@ -4,7 +4,7 @@ import { AvailableGeometricShape } from './../constants/available-geometric-shap
 import { CanvasManagerService } from './../services/canvas-manager.service';
 
 const Black = '#000000';
-const Transparent = '#FF000000';
+const Transparent = 'transparent';
 
 @Component({
   selector: 'lib-mobile-sketch-tool',
@@ -62,8 +62,9 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
     if (this.isLoaded && this.previousImageData !== this.imageData) {
       this.canvasManagerService.emptyCanvas();
       this.canvasManagerService.setBackgroundFromURL(this.imageData);
-      this.computeJson();
       this.previousImageData = this.imageData;
+      this.currentJson = <JSON>{};
+      this.json.emit(JSON.stringify(this.currentJson));
     }
   }
 
@@ -73,7 +74,6 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
 
   public addText() {
     this.canvasManagerService.addText(this.strokeColor, ' ');
-    this.computeJson();
   }
 
   public addShape(shape: string) {
@@ -82,12 +82,10 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
       this.fillColor,
       AvailableGeometricShape[shape]
     );
-    this.computeJson();
   }
 
   public addImage(source: string) {
     this.canvasManagerService.addImage(this.iconsPath + source);
-    this.computeJson();
   }
 
   public changeStrokeColor() {
@@ -95,7 +93,6 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
       this.strokeColor
     );
     this.canvasManagerService.setFreeDrawingBrushColor(this.strokeColor);
-    this.computeJson();
   }
 
   public bringFoward() {
@@ -106,37 +103,24 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
     this.canvasManagerService.sendSelectedObjectsToBack();
   }
 
-  public saveImage() {
-    const dataURL = this.canvasManagerService.exportImageAsDataURL();
-
-    const link = document.createElement('a');
-    link.download = 'image';
-
-    link.href = dataURL;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  }
-
   public crop() {
     this.isCropping = true;
     this.canvasManagerService.disableSelection();
     this.canvasManagerService.addSelectionRectangle();
-    this.computeJson();
     this.isUndoAvailable = true;
+    this.previousJson = this.canvasManagerService.jsonFromCanvas();
   }
 
   public deleteSelection() {
     this.canvasManagerService.deleteSelectedObjects();
-    this.computeJson();
   }
 
   public mouseUp(event) {
     if (this.isCropping) {
       this.isCropping = false;
       this.canvasManagerService.cropImage();
+      this.isUndoAvailable = true;
     }
-    this.computeJson();
   }
 
   public mouseMove(event) {
@@ -156,16 +140,18 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
   }
 
   public undo() {
-    this.canvasManagerService.loadfromJson(this.previousJson).then(() => {
-      this.computeJson();
-    });
+    this.canvasManagerService.loadfromJson(this.previousJson);
+    this.isUndoAvailable = false; 
   }
 
-  private computeJson() {
-    this.previousJson = this.currentJson;
-    this.currentJson = this.canvasManagerService.jsonFromCanvas();
-    this.json.emit(JSON.stringify(this.currentJson));
-    this.isUndoAvailable = false;
+  public onColorClicked() {
+    this.isSelectingColor = true;
+  }
+
+  public setColor(color: string) {
+    this.strokeColor = color;
+    this.changeStrokeColor();
+    this.isSelectingColor = false;
   }
 
   public presentShapeActionSheet() {
@@ -314,13 +300,13 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
     actionSheet.present();
   }
 
-  public onColorClicked() {
-    this.isSelectingColor = true;
+  public save() {
+    this.computeJson();
+    this.isUndoAvailable = false;
   }
 
-  public setColor(color: string) {
-    this.strokeColor = color;
-    this.changeStrokeColor();
-    this.isSelectingColor = false;
+  private computeJson() {
+    this.currentJson = this.canvasManagerService.jsonFromCanvas();
+    this.json.emit(JSON.stringify(this.currentJson));
   }
 }
