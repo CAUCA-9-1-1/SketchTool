@@ -10,21 +10,42 @@ interface ScaleData {
   top: number;
 }
 
+interface Position {
+  x: number,
+  y: number
+}
+
 @Injectable()
 export class CanvasManagerService {
   private canvas;
   private cropRectangle: fabric.Rect;
-  private mouse: number[];
-  private pos: number[];
+  private mousePosition: Position;
+  private cropStartingPosition: Position;
 
   constructor() {
     this.emptyCanvas();
-    this.mouse = [0, 0];
-    this.pos = [0, 0];
+    this.mousePosition = {x: 0, y: 0};
+    this.cropStartingPosition = {x: 0, y: 0};
   }
 
   get backgroundImage() {
     return this.canvas;
+  }
+
+  get canvasObjects() {
+    return this.canvas.getObjects();
+  }
+
+  get canvasBackgroundImage() {
+    return this.canvas.backgroundImage;
+  }
+
+  get activeObject() {
+    return this.canvas.getActiveObject();
+  }
+
+  get activeGroup() {
+    return this.canvas.getActiveObjects();
   }
 
   public emptyCanvas(): void {
@@ -48,11 +69,7 @@ export class CanvasManagerService {
     this.canvas.renderAll();
   }
 
-  public addGeometricShape(
-    strokeColor: string,
-    fillColor: string,
-    shape: AvailableGeometricShape
-  ): void {
+  public addGeometricShape(strokeColor: string, fillColor: string, shape: AvailableGeometricShape): void {
     switch (shape) {
       case AvailableGeometricShape.Rectangle:
         this.addRectangle(strokeColor, fillColor);
@@ -226,17 +243,13 @@ export class CanvasManagerService {
 
           const scaleData = resize(f_img, canvas);
 
-          /* f_img.scaleX = scaleData.scaleFactor;
-          f_img.scaleY = scaleData.scaleFactor; */
-
           canvas.setBackgroundImage(f_img, canvas.renderAll.bind(canvas), {
             scaleX: scaleData.scaleFactor,
             scaleY: scaleData.scaleFactor
           });
 
-
-         /*  canvas.setWidth(f_img.width * scaleData.scaleFactor);
-          canvas.setHeight(f_img.height * scaleData.scaleFactor); */
+          canvas.setWidth(f_img.width * scaleData.scaleFactor);
+          canvas.setHeight(f_img.height * scaleData.scaleFactor);
 
           canvas.renderAll();
           resolve();
@@ -247,12 +260,12 @@ export class CanvasManagerService {
   }
 
   private resizeCanvasAndComputeScaleFactor(f_img: fabric.Image, canvas: fabric.Canvas): ScaleData {
-/*     const container = document.getElementsByClassName(
+    const container = document.getElementsByClassName(
       'div-canvas-container'
     )[0];
 
     canvas.setWidth(container.clientWidth);
-    canvas.setHeight(container.clientHeight); */
+    canvas.setHeight(container.clientHeight);
 
     const canvasWidth = canvas.getWidth();
     const canvasHeight = canvas.getHeight();
@@ -270,7 +283,12 @@ export class CanvasManagerService {
       top = 0;
       left = -(f_img.width * scaleFactor - canvasWidth) / 2;
     }
-    return {scaleFactor: scaleFactor, left: left, top: top};
+    return { scaleFactor: scaleFactor, left: left, top: top };
+  }
+
+  public onOrientationChange() {
+    this.mousePosition = {x: this.canvas.getWidth, y: this.canvas.getHeight };
+    this.cropImage();
   }
 
   public changeSelectedObjectsFillColor(color: string): void {
@@ -332,41 +350,36 @@ export class CanvasManagerService {
     }
   }
 
-  public exportImageAsDataURL(): string {
-    return this.canvas.toDataURL('image/png');
-  }
-
-  public get canvasObjects() {
-    return this.canvas.getObjects();
-  }
-
-  public get canvasBackgroundImage() {
-    return this.canvas.backgroundImage;
-  }
-
-  public selectItem(itemNumber: number): void {
-    this.canvas.setActiveObject(this.canvas.item(itemNumber));
-  }
-
-  public get activeObject() {
-    return this.canvas.getActiveObject();
-  }
-
-  public getIndexOf(activeObject): number {
-    return this.canvas.getObjects().indexOf(activeObject);
-  }
-
   public jsonFromCanvas(): JSON {
     return this.canvas.toJSON();
   }
 
   public loadfromJson(json: JSON): Promise<void> {
+    const container = document.getElementsByClassName(
+      'div-canvas-container'
+    )[0];
+
+    this.canvas.setWidth(container.clientWidth);
+    this.canvas.setHeight(container.clientHeight);
+
     return new Promise(
       (resolve, reject): void => {
         this.canvas.loadFromJSON(json, this.canvas.renderAll.bind(this.canvas));
         resolve();
       }
     );
+  }
+
+  public exportImageAsDataURL(): string {
+    return this.canvas.toDataURL('image/png');
+  }
+
+  public selectItem(itemNumber: number): void {
+    this.canvas.setActiveObject(this.canvas.item(itemNumber));
+  }
+
+  public getIndexOf(activeObject): number {
+    return this.canvas.getObjects().indexOf(activeObject);
   }
 
   private selectLastObject(): void {
@@ -402,12 +415,11 @@ export class CanvasManagerService {
     this.canvas.add(this.cropRectangle);
   }
 
-
   public ajustCropRectanglFromMouse(event: MouseEvent): boolean {
-    const x = Math.min(event.layerX, this.mouse[0]),
-      y = Math.min(event.layerY, this.mouse[1]),
-      w = Math.abs(event.layerX - this.mouse[0]),
-      h = Math.abs(event.layerY - this.mouse[1]);
+    const x = Math.min(event.layerX, this.mousePosition.x),
+      y = Math.min(event.layerY, this.mousePosition.y),
+      w = Math.abs(event.layerX - this.mousePosition.x),
+      h = Math.abs(event.layerY - this.mousePosition.y);
 
     if (!w || !h) {
       return false;
@@ -425,15 +437,13 @@ export class CanvasManagerService {
   }
 
   public startSelectingCropRectangleFromMouse(event: MouseEvent): void {
-    this.pos[0] = this.canvas.left;
-    this.pos[1] = this.canvas.top;
+    this.cropStartingPosition = { x: this.canvas.left, y: this.canvas.top };
 
     this.cropRectangle.left = event.layerX;
     this.cropRectangle.top = event.layerY;
     this.cropRectangle.setCoords();
 
-    this.mouse[0] = event.layerX;
-    this.mouse[1] = event.layerY;
+    this.mousePosition = {x: event.layerX, y: event.layerY };
 
     this.canvas.renderAll();
     this.cropRectangle.visible = true;
@@ -491,18 +501,18 @@ export class CanvasManagerService {
 
     const rect = event.target.getBoundingClientRect();
 
-    const x = Math.min(touch.clientX - rect.left, this.mouse[0]),
-      y = Math.min(touch.clientY - rect.top, this.mouse[1]),
-      w = Math.abs(touch.clientX - rect.left - this.mouse[0]),
-      h = Math.abs(touch.clientY - rect.top - this.mouse[1]);
+    const x = Math.min(touch.clientX - rect.left, this.mousePosition.x),
+      y = Math.min(touch.clientY - rect.top, this.mousePosition.y),
+      w = Math.abs(touch.clientX - rect.left - this.mousePosition.x),
+      h = Math.abs(touch.clientY - rect.top - this.mousePosition.y);
 
     if (!w || !h) {
       return false;
     }
 
     this.cropRectangle
-      .set('top', y)
       .set('left', x)
+      .set('top', y)
       .set('width', w)
       .set('height', h);
 
@@ -512,8 +522,7 @@ export class CanvasManagerService {
   }
 
   public startSelectingCropRectangle(event): void {
-    this.pos[0] = this.canvas.left;
-    this.pos[1] = this.canvas.top;
+    this.cropStartingPosition = { x: this.canvas.left, y: this.canvas.top };
 
     const touch = event.touches[0];
     const rect = event.target.getBoundingClientRect();
@@ -522,8 +531,7 @@ export class CanvasManagerService {
     this.cropRectangle.top = touch.clientY - rect.top;
     this.cropRectangle.setCoords();
 
-    this.mouse[0] = touch.clientX - rect.left;
-    this.mouse[1] = touch.clientY - rect.top;
+    this.mousePosition = { x: touch.clientX - rect.left, y: touch.clientY - rect.top };
 
     this.canvas.renderAll();
     this.cropRectangle.visible = true;
