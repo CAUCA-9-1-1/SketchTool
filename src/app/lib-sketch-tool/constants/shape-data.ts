@@ -1,9 +1,9 @@
 export const SHAPE_DATA = {
-  width: 50,
-  height: 50,
+  width: 150,
+  height: 150,
   left: 50,
   top: 50,
-  radius: 25,
+  radius: 100,
   stroke: 3,
   freeDrawingBrushWidth: 10,
 };
