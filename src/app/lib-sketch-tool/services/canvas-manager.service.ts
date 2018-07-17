@@ -201,7 +201,6 @@ export class CanvasManagerService {
     text.setColor(color);
 
     this.canvas.add(text);
-    this.selectLastObject();
   }
 
   public addImage(imageURL: string): Promise<void> {
@@ -409,12 +408,12 @@ export class CanvasManagerService {
       objects[i]['top'] *= objectScale;
       objects[i]['scaleX'] *= objectScale;
       objects[i]['scaleY'] *= objectScale;
-    };
+    }
 
     this.canvas.selectable = true;
     this.canvas.selection = true;
 
-    this.canvas.renderAll();  
+    this.canvas.renderAll();
   }
 
   public exportImageAsDataURL(): string {
