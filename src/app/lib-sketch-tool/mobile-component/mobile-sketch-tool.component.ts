@@ -80,7 +80,7 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
   }
 
   public addText() {
-    this.canvasManagerService.addText(this.strokeColor, ' ');
+    this.canvasManagerService.addText(this.strokeColor, 'text');
   }
 
   public addShape(shape: string) {
