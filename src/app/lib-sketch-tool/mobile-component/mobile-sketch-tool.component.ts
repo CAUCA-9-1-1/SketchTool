@@ -44,27 +44,34 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    this.canvasManagerService.emptyCanvas();
-
-    if (this.loadedJson == null) {
-      this.canvasManagerService.setBackgroundFromURL(this.imageData);
-    } else {
-      this.previousJson = JSON.parse(this.loadedJson);
-      this.currentJson = this.previousJson;
-      this.canvasManagerService
-        .loadfromJson(JSON.parse(this.loadedJson));
+    if (this.imageData) {
+      this.canvasManagerService.emptyCanvas();
+      if (this.loadedJson == null || this.loadedJson === '') {
+        this.canvasManagerService.setBackgroundFromURL(this.imageData);
+      } else {
+        this.previousJson = JSON.parse(this.loadedJson);
+        this.currentJson = this.previousJson;
+        this.canvasManagerService
+          .loadfromJson(JSON.parse(this.loadedJson));
+      }
+      this.isLoaded = true;
+      this.previousImageData = this.imageData;
     }
-    this.isLoaded = true;
-    this.previousImageData = this.imageData;
   }
 
   ngOnChanges() {
-    if (this.isLoaded && this.previousImageData !== this.imageData) {
-      this.canvasManagerService.emptyCanvas();
-      this.canvasManagerService.setBackgroundFromURL(this.imageData);
-      this.previousImageData = this.imageData;
-      this.currentJson = <JSON>{};
-      this.json.emit(JSON.stringify(this.currentJson));
+    if (this.isLoaded) {
+      if (this.loadedJson === '' || this.loadedJson === null || this.imageData !== this.previousImageData) {
+        this.canvasManagerService.emptyCanvas();
+        this.canvasManagerService.setBackgroundFromURL(this.imageData);
+        this.previousImageData = this.imageData;
+        this.currentJson = null;
+      } else if (this.loadedJson !== JSON.stringify(this.currentJson)) {
+          this.previousJson = JSON.parse(this.loadedJson);
+          this.currentJson = this.previousJson;
+          this.canvasManagerService
+            .loadfromJson(JSON.parse(this.loadedJson));
+      } 
     }
   }
 
