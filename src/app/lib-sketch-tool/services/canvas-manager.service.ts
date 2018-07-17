@@ -364,10 +364,57 @@ export class CanvasManagerService {
 
     return new Promise(
       (resolve, reject): void => {
+        this.adjustCanvas(json);
         this.canvas.loadFromJSON(json, this.canvas.renderAll.bind(this.canvas));
         resolve();
       }
     );
+  }
+
+  public adjustCanvas(json: JSON): void {
+    const backgroundImage = json['backgroundImage'];
+
+    const container = document.getElementsByClassName(
+      'div-canvas-container'
+    )[0];
+
+    const width = backgroundImage['width'];
+    const height = backgroundImage['height'];
+
+    const canvasWidth = container.clientWidth;
+    const canvasHeight = container.clientHeight;
+
+    const canvasAspect = canvasWidth / canvasHeight;
+    const imgAspect = width / height;
+    let scaleFactor;
+
+    if (canvasAspect <= imgAspect) {
+      scaleFactor = canvasWidth / width;
+    } else {
+      scaleFactor = canvasHeight / height;
+    }
+
+    const objectScale = scaleFactor / backgroundImage['scaleX'];
+
+    backgroundImage['scaleX'] = scaleFactor;
+    backgroundImage['scaleY'] = scaleFactor;
+
+    this.canvas.setWidth(width * scaleFactor);
+    this.canvas.setHeight(height * scaleFactor);
+
+    const objects = json['objects'];
+
+    for (let i = 0; i < objects.length; i++) {
+      objects[i]['left'] *= objectScale;
+      objects[i]['top'] *= objectScale;
+      objects[i]['scaleX'] *= objectScale;
+      objects[i]['scaleY'] *= objectScale;
+    };
+
+    this.canvas.selectable = true;
+    this.canvas.selection = true;
+
+    this.canvas.renderAll();  
   }
 
   public exportImageAsDataURL(): string {
