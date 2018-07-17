@@ -191,7 +191,7 @@ export class CanvasManagerService {
   }
 
   public addText(color: string, inputText: string): void {
-    const text = new fabric.IText(inputText, {
+    const text = new fabric.IText('text', {
       fontFamily: 'arial black',
       fontStyle: 'bold',
       left: SHAPE_DATA.left,
