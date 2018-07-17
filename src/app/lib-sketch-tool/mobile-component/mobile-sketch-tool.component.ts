@@ -297,7 +297,6 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
       buttons: buttons
     });
     actionSheet.onDidDismiss(() => {
-      // Don't forget to delete css styles on close of actionSheet:
       for (let i = 0; i < actionSheetStyles.length; i++) {
         if (actionSheetStyles[i].parentNode != null)
           actionSheetStyles[i].parentNode.removeChild(actionSheetStyles[i]);
