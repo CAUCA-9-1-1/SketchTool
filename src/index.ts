@@ -1,4 +1,4 @@
-export * from './mobile-component/mobile-sketch-tool.component';
-export * from './directives/canvas-click.directive';
-export * from './modules/sketch-tool.module';
+export * from './app/lib-sketch-tool/mobile-component/mobile-sketch-tool.component';
+export * from './app/lib-sketch-tool/services/canvas-manager.service';
+export * from './app/lib-sketch-tool/sketch-tool.module';
 

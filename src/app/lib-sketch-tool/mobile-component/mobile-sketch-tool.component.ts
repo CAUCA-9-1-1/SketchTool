@@ -46,7 +46,7 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
   ngOnInit() {
     if (this.imageData) {
       this.canvasManagerService.emptyCanvas();
-      if (this.loadedJson == null || this.loadedJson === '') {
+      if (this.loadedJson == null || this.loadedJson.length < 10) {
         this.canvasManagerService.setBackgroundFromURL(this.imageData);
       } else {
         this.previousJson = JSON.parse(this.loadedJson);
@@ -61,7 +61,7 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
 
   ngOnChanges() {
     if (this.isLoaded) {
-      if (this.loadedJson === '' || this.loadedJson === null || this.imageData !== this.previousImageData) {
+      if (this.loadedJson === null || this.loadedJson.length < 10 || this.imageData !== this.previousImageData) {
         this.canvasManagerService.emptyCanvas();
         this.canvasManagerService.setBackgroundFromURL(this.imageData);
         this.previousImageData = this.imageData;
