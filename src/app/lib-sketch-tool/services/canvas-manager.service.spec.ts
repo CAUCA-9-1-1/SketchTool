@@ -1,10 +1,9 @@
 import { TestBed, inject, async } from '@angular/core/testing';
 import { CanvasManagerService } from './canvas-manager.service';
 import { AvailableGeometricShape } from './../constants/available-geometric-shapes';
-import { fabric } from 'fabric';
 
 const testImageURL =
-  'http://cdn3-www.dogtime.com/assets/uploads/gallery/pug-dog-breed-pictures/3-sidesitting.jpg';
+  '/src/assets/implentation-plan-example-picture.png';
 const black = '#000000';
 
 describe('ImageEditionService', () => {
