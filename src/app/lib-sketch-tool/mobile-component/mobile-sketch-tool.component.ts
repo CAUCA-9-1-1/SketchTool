@@ -312,11 +312,11 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
   }
 
   public presentPictogramsActionSheet() {
-    let buttons = [];
-    let actionSheetStyles = [];
-    let images = this.icons;
+    const buttons = [];
+    const actionSheetStyles = [];
+    const images = this.icons;
     for (let i = 0; i < images.length; i++) {
-      let style = document.createElement('style');
+      const style = document.createElement('style');
       style.type = 'text/css';
       style.innerHTML =
         '.customCSSClass' +
@@ -339,16 +339,17 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
       });
     }
 
-    let titleText = this.translate.instant('addPictogram');
+    const titleText = this.translate.instant('addPictogram');
 
-    let actionSheet = this.actionSheetCtrl.create({
+    const actionSheet = this.actionSheetCtrl.create({
       title: titleText,
       buttons: buttons
     });
     actionSheet.onDidDismiss(() => {
       for (let i = 0; i < actionSheetStyles.length; i++) {
-        if (actionSheetStyles[i].parentNode != null)
+        if (actionSheetStyles[i].parentNode != null) {
           actionSheetStyles[i].parentNode.removeChild(actionSheetStyles[i]);
+        }
       }
     });
 
