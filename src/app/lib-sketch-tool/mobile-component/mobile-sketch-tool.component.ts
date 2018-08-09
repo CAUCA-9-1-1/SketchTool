@@ -178,7 +178,7 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
   }
 
   private translateShapeButtonsText(): Array<String> {
-    let translationArray = [];
+    const translationArray = [];
     translationArray.push(this.translate.instant('rectangle'));
     translationArray.push(this.translate.instant('triangle'));
     translationArray.push(this.translate.instant('circle'));
@@ -257,36 +257,51 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
     actionSheet.present();
   }
 
+  private translateEditButtonsText(): Array<String> {
+    const translationArray = [];
+    translationArray.push(this.translate.instant('crop'));
+    translationArray.push(this.translate.instant('group'));
+    translationArray.push(this.translate.instant('bringToFront'));
+    translationArray.push(this.translate.instant('sendToBack'));
+    translationArray.push(this.translate.instant('delete'));
+    return translationArray;
+  }
+
   public presentEditActionSheet() {
+    const titleText = this.translate.instant('edition');
+
+    const buttonsText = this.translateEditButtonsText();
+    let i = 0;
+
     const actionSheet = this.actionSheetCtrl.create({
-      title: 'Édition',
+      title: titleText,
       buttons: [
         {
-          text: '\uf125 \u0020 Rogner',
+          text: '\uf125 ' + buttonsText[i++],
           handler: () => {
             this.crop();
           }
         },
         {
-          text: '\uf247   Grouper',
+          text: '\uf247   ' + buttonsText[i++],
           handler: () => {
             this.group();
           }
         },
         {
-          text: '\uf0de   Avancer',
+          text: '\uf0de   ' + buttonsText[i++],
           handler: () => {
             this.bringFoward();
           }
         },
         {
-          text: '\uf0dd   Reculer',
+          text: '\uf0dd   ' + buttonsText[i++],
           handler: () => {
             this.sendToBack();
           }
         },
         {
-          text: '\uf1f8   Supprimer',
+          text: '\uf1f8   ' + buttonsText[i++],
           handler: () => {
             this.deleteSelection();
           }
