@@ -338,8 +338,11 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
         }
       });
     }
+
+    let titleText = this.translate.instant('addPictogram');
+
     let actionSheet = this.actionSheetCtrl.create({
-      title: 'Ajouter un pictogramme',
+      title: titleText,
       buttons: buttons
     });
     actionSheet.onDidDismiss(() => {
