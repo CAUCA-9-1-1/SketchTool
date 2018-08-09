@@ -2,6 +2,7 @@ import { Component, Input, Output, OnInit, OnChanges, EventEmitter, transition} 
 import { ActionSheetController } from 'ionic-angular';
 import { AvailableGeometricShape } from './../constants/available-geometric-shapes';
 import { CanvasManagerService } from './../services/canvas-manager.service';
+import {TranslateService} from "@ngx-translate/core";
 
 const Black = '#000000';
 const Transparent = 'transparent';
@@ -33,7 +34,8 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
 
   constructor(
     public actionSheetCtrl: ActionSheetController,
-    private canvasManagerService: CanvasManagerService
+    private canvasManagerService: CanvasManagerService,
+    private translate: TranslateService
   ) {
     this.strokeColor = Black;
     this.fillColor = Transparent;
@@ -175,12 +177,27 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
     this.emitCanvas();
   }
 
+  private translateShapeButtonsText(): Array<String> {
+    let translationArray = [];
+    translationArray.push(this.translate.instant('rectangle'));
+    translationArray.push(this.translate.instant('triangle'));
+    translationArray.push(this.translate.instant('circle'));
+    translationArray.push(this.translate.instant('line'));
+    translationArray.push(this.translate.instant('cross'));
+    translationArray.push(this.translate.instant('text'));
+    return translationArray;
+  }
+
   public presentShapeActionSheet() {
+    const titleText = this.translate.instant('addGeometricShape');
+    const buttonsText = this.translateShapeButtonsText();
+    let i = 0;
+
     const actionSheet = this.actionSheetCtrl.create({
-      title: 'Ajouter une forme',
+      title: titleText,
       buttons: [
         {
-          text: '\uf0c8   Rectangle',
+          text: '\uf0c8   ' + buttonsText[i++],
           handler: () => {
             this.canvasManagerService.addGeometricShape(
               this.strokeColor,
@@ -190,7 +207,7 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
           }
         },
         {
-          text: '\uf0d8   Triangle',
+          text: '\uf0d8   ' + buttonsText[i++],
           handler: () => {
             this.canvasManagerService.addGeometricShape(
               this.strokeColor,
@@ -200,7 +217,7 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
           }
         },
         {
-          text: '\uf111   Cercle',
+          text: '\uf111   ' + buttonsText[i++],
           handler: () => {
             this.canvasManagerService.addGeometricShape(
               this.strokeColor,
@@ -210,7 +227,7 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
           }
         },
         {
-          text: '\uf068   Ligne',
+          text: '\uf068   ' + buttonsText[i++],
           handler: () => {
             this.canvasManagerService.addGeometricShape(
               this.strokeColor,
@@ -220,7 +237,7 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
           }
         },
         {
-          text: '\uf067   Croix',
+          text: '\uf067   ' + buttonsText[i++],
           handler: () => {
             this.canvasManagerService.addGeometricShape(
               this.strokeColor,
@@ -230,7 +247,7 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
           }
         },
         {
-          text: '\uf031   Texte',
+          text: '\uf031   ' + buttonsText[i++],
           handler: () => {
             this.canvasManagerService.addText(this.strokeColor, '');
           }
