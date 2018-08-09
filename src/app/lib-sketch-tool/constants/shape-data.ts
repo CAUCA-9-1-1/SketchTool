@@ -6,4 +6,5 @@ export const SHAPE_DATA = {
   radius: 100,
   stroke: 10,
   freeDrawingBrushWidth: 10,
+  cornerSize: 20
 };

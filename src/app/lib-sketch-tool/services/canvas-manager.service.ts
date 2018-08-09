@@ -11,13 +11,14 @@ interface ScaleData {
 }
 
 interface Position {
-  x: number,
-  y: number
+  x: number;
+  y: number;
 }
 
 @Injectable()
 export class CanvasManagerService {
-  private canvas;
+  public canvas;
+
   private cropRectangle: fabric.Rect;
   private mousePosition: Position;
   private cropStartingPosition: Position;
@@ -98,7 +99,8 @@ export class CanvasManagerService {
         top: SHAPE_DATA.top,
         fill: fillColor,
         stroke: strokeColor,
-        strokeWidth: SHAPE_DATA.stroke
+        strokeWidth: SHAPE_DATA.stroke,
+        cornerSize: SHAPE_DATA.cornerSize
       })
     );
   }
@@ -111,7 +113,8 @@ export class CanvasManagerService {
         radius: SHAPE_DATA.radius,
         stroke: strokeColor,
         strokeWidth: SHAPE_DATA.stroke,
-        fill: fillColor
+        fill: fillColor,
+        cornerSize: SHAPE_DATA.cornerSize
       })
     );
   }
@@ -125,7 +128,8 @@ export class CanvasManagerService {
         top: SHAPE_DATA.top,
         fill: fillColor,
         stroke: strokeColor,
-        strokeWidth: SHAPE_DATA.stroke
+        strokeWidth: SHAPE_DATA.stroke,
+        cornerSize: SHAPE_DATA.cornerSize
       })
     );
   }
@@ -139,7 +143,8 @@ export class CanvasManagerService {
       left: 50,
       top: 100,
       stroke: strokeColor,
-      strokeWidth: 5
+      strokeWidth: 5,
+      cornerSize: SHAPE_DATA.cornerSize
     });
 
     line.setControlsVisibility({
@@ -159,7 +164,8 @@ export class CanvasManagerService {
       left: 100,
       top: 50,
       stroke: strokeColor,
-      strokeWidth: 5
+      strokeWidth: 5,
+      cornerSize: SHAPE_DATA.cornerSize
     });
 
     line.setControlsVisibility({
@@ -195,7 +201,8 @@ export class CanvasManagerService {
       fontFamily: 'arial black',
       fontStyle: 'bold',
       left: SHAPE_DATA.left,
-      top: SHAPE_DATA.top
+      top: SHAPE_DATA.top,
+      cornerSize: SHAPE_DATA.cornerSize
     });
 
     text.setColor(color);
@@ -217,7 +224,8 @@ export class CanvasManagerService {
             left: SHAPE_DATA.left,
             top: SHAPE_DATA.top,
             scaleX: 1,
-            scaleY: 1
+            scaleY: 1,
+            cornerSize: SHAPE_DATA.cornerSize
           });
           canvas.add(fabricImage);
           resolve();

@@ -1,4 +1,4 @@
-import { Component, Input, Output, OnInit, OnChanges, EventEmitter} from '@angular/core';
+import { Component, Input, Output, OnInit, OnChanges, EventEmitter, transition} from '@angular/core';
 import { ActionSheetController } from 'ionic-angular';
 import { AvailableGeometricShape } from './../constants/available-geometric-shapes';
 import { CanvasManagerService } from './../services/canvas-manager.service';
@@ -24,7 +24,7 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
   @Input() public iconsPath: string;
   @Input() public icons: [string];
 
-  @Output() public json = new EventEmitter<string>();
+  @Output() public canvas = new EventEmitter<fabric.Canvas>();
 
   private isLoaded: boolean;
   private previousImageData: string;
@@ -57,6 +57,7 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
       this.isLoaded = true;
       this.previousImageData = this.imageData;
     }
+    this.emitCanvas();
   }
 
   ngOnChanges() {
@@ -71,8 +72,9 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
           this.currentJson = this.previousJson;
           this.canvasManagerService
             .loadfromJson(JSON.parse(this.loadedJson));
-      } 
+      }
     }
+    this.emitCanvas();
   }
 
   get hasPictograms(): boolean {
@@ -80,7 +82,8 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
   }
 
   public addText() {
-    this.canvasManagerService.addText(this.strokeColor, 'text');
+    this.canvasManagerService.addText(this.strokeColor, 'text ');
+    this.emitCanvas();
   }
 
   public addShape(shape: string) {
@@ -89,10 +92,12 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
       this.fillColor,
       AvailableGeometricShape[shape]
     );
+    this.emitCanvas();
   }
 
   public addImage(source: string) {
     this.canvasManagerService.addImage(this.iconsPath + source);
+    this.emitCanvas();
   }
 
   public changeStrokeColor() {
@@ -100,14 +105,17 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
       this.strokeColor
     );
     this.canvasManagerService.setFreeDrawingBrushColor(this.strokeColor);
+    this.emitCanvas();
   }
 
   public bringFoward() {
     this.canvasManagerService.bringSelectedObjectsToFront();
+    this.emitCanvas();
   }
 
   public sendToBack() {
     this.canvasManagerService.sendSelectedObjectsToBack();
+    this.emitCanvas();
   }
 
   public crop() {
@@ -116,10 +124,12 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
     this.canvasManagerService.addSelectionRectangle();
     this.isUndoAvailable = true;
     this.previousJson = this.canvasManagerService.jsonFromCanvas();
+    this.emitCanvas();
   }
 
   public deleteSelection() {
     this.canvasManagerService.deleteSelectedObjects();
+    this.emitCanvas();
   }
 
   public mouseUp(event) {
@@ -127,6 +137,7 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
       this.isCropping = false;
       this.canvasManagerService.cropImage();
       this.isUndoAvailable = true;
+      this.emitCanvas();
     }
   }
 
@@ -144,11 +155,13 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
 
   public group() {
     this.canvasManagerService.groupSelectedObjects();
+    this.emitCanvas();
   }
 
   public undo() {
     this.canvasManagerService.loadfromJson(this.previousJson);
-    this.isUndoAvailable = false; 
+    this.isUndoAvailable = false;
+    this.emitCanvas();
   }
 
   public onColorClicked() {
@@ -159,6 +172,7 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
     this.strokeColor = color;
     this.changeStrokeColor();
     this.isSelectingColor = false;
+    this.emitCanvas();
   }
 
   public presentShapeActionSheet() {
@@ -306,13 +320,7 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
     actionSheet.present();
   }
 
-  public save() {
-    this.computeJson();
-    this.isUndoAvailable = false;
-  }
-
-  private computeJson() {
-    this.currentJson = this.canvasManagerService.jsonFromCanvas();
-    this.json.emit(JSON.stringify(this.currentJson));
+  public emitCanvas() {
+    this.canvas.emit(this.canvasManagerService.canvas);
   }
 }
