@@ -1,4 +1,4 @@
-<div class="div-sketch-tool">
+<ion-content scroll="false">
     <div
         class="div-canvas-container"
         (touchstart)="mouseDown($event)"
@@ -215,10 +215,13 @@
             </ion-grid>
         </div>
     </div>
+</ion-content>
 
+<ion-footer>
     <ion-toolbar>
         <div class="div-edit-toolbar">
-            <button class="button-edit-toolbar"
+            <button
+                class="button-edit-toolbar"
                 ion-button
                 large
                 [clear]="true"
@@ -230,7 +233,8 @@
                 ></i>
             </button>
 
-            <button class="button-edit-toolbar"
+            <button
+                class="button-edit-toolbar"
                 ion-button
                 large
                 [clear]="true"
@@ -243,7 +247,8 @@
                 ></i>
             </button>
 
-            <button class="button-edit-toolbar"
+            <button
+                class="button-edit-toolbar"
                 ion-button
                 large
                 [clear]="true"
@@ -255,7 +260,8 @@
                 ></i>
             </button>
 
-            <button class="button-edit-toolbar"
+            <button
+                class="button-edit-toolbar"
                 ion-button
                 large
                 [clear]="true"
@@ -267,19 +273,8 @@
                 ></i>
             </button>
 
-            <button class="button-edit-toolbar"
-                ion-button
-                large
-                [clear]="true"
-                (click)="save()"
-            >
-                <i
-                    class="fa fa-save"
-                    id="icon"
-                ></i>
-            </button>
-
-            <button class="button-edit-toolbar"
+            <button
+                class="button-edit-toolbar"
                 ion-button
                 large
                 [clear]="true"
@@ -294,4 +289,4 @@
 
         </div>
     </ion-toolbar>
-</div>
+</ion-footer>
