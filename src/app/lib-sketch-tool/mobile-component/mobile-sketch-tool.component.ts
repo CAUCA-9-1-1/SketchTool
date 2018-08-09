@@ -2,7 +2,7 @@ import { Component, Input, Output, OnInit, OnChanges, EventEmitter, transition} 
 import { ActionSheetController } from 'ionic-angular';
 import { AvailableGeometricShape } from './../constants/available-geometric-shapes';
 import { CanvasManagerService } from './../services/canvas-manager.service';
-import {TranslateService} from "@ngx-translate/core";
+import { TranslateService } from "@ngx-translate/core";
 
 const Black = '#000000';
 const Transparent = 'transparent';
