@@ -28,6 +28,7 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
   @Output() public canvas = new EventEmitter<fabric.Canvas>();
 
   private isLoaded: boolean;
+  private isDrawing: boolean;
   private previousImageData: string;
   private currentJson: JSON;
   private previousJson: JSON;
@@ -175,6 +176,12 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
     this.changeStrokeColor();
     this.isSelectingColor = false;
     this.emitCanvas();
+  }
+
+  public draw() {
+    this.isDrawing = !this.isDrawing;
+    this.canvasManagerService.toggleFreeDrawing();
+    this.canvasManagerService.setFreeDrawingBrushColor(this.strokeColor);
   }
 
   private translateShapeButtonsText(): Array<String> {
