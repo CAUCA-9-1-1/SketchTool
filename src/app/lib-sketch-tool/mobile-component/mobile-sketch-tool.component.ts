@@ -19,6 +19,7 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
   public isCropping: boolean;
   public isUndoAvailable: boolean;
   public isSelectingColor: boolean;
+  public isDrawing: boolean;
 
   @Input() public imageData: string;
   @Input() public loadedJson: string;
@@ -28,7 +29,6 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
   @Output() public canvas = new EventEmitter<fabric.Canvas>();
 
   private isLoaded: boolean;
-  private isDrawing: boolean;
   private previousImageData: string;
   private currentJson: JSON;
   private previousJson: JSON;
@@ -184,6 +184,13 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
     this.canvasManagerService.setFreeDrawingBrushColor(this.strokeColor);
   }
 
+  private disableDrawing() {
+    if (this.isDrawing) {
+      this.isDrawing = false;
+      this.canvasManagerService.toggleFreeDrawing();
+    }
+  }
+
   private translateShapeButtonsText(): Array<String> {
     const translationArray = [];
     translationArray.push(this.translate.instant('rectangle'));
@@ -196,6 +203,8 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
   }
 
   public presentShapeActionSheet() {
+    this.disableDrawing();
+
     const titleText = this.translate.instant('addGeometricShape');
     const buttonsText = this.translateShapeButtonsText();
     let i = 0;
@@ -275,6 +284,8 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
   }
 
   public presentEditActionSheet() {
+    this.disableDrawing();
+
     const titleText = this.translate.instant('edition');
 
     const buttonsText = this.translateEditButtonsText();
@@ -319,6 +330,8 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
   }
 
   public presentPictogramsActionSheet() {
+    this.disableDrawing();
+
     const buttons = [];
     const actionSheetStyles = [];
     const images = this.icons;

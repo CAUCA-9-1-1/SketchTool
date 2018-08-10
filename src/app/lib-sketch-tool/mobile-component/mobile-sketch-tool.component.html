@@ -265,6 +265,19 @@
                 ion-button
                 large
                 [clear]="true"
+                (click)="draw()"
+            >
+                <i
+                    class="fa fa-pencil"
+                    id="icon"
+                ></i>
+            </button>
+
+            <button
+                class="button-edit-toolbar"
+                ion-button
+                large
+                [clear]="true"
                 (click)="onColorClicked()"
             >
                 <i
