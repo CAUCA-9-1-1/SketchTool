@@ -469,7 +469,7 @@ export class CanvasManagerService {
     this.canvas.add(this.cropRectangle);
   }
 
-  public ajustCropRectanglFromMouse(event: MouseEvent): boolean {
+  public ajustCropRectangleFromMouse(event: MouseEvent): boolean {
     const x = Math.min(event.layerX, this.mousePosition.x),
       y = Math.min(event.layerY, this.mousePosition.y),
       w = Math.abs(event.layerX - this.mousePosition.x),

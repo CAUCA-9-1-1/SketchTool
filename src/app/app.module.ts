@@ -2,17 +2,23 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { MatSelectModule } from '@angular/material/select';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { ColorPickerModule } from 'ngx-color-picker';
+import { MatButtonModule } from '@angular/material';
 
-import { SketchToolModule } from './lib-sketch-tool/sketch-tool.module';
+import { WebSketchToolComponent } from './lib-sketch-tool/web-component/web-sketch-tool.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    WebSketchToolComponent
   ],
   imports: [
     BrowserModule,
-    SketchToolModule,
-    MatSelectModule
+    MatSelectModule,
+    ColorPickerModule,
+    MatButtonModule,
+    MatToolbarModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
