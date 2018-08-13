@@ -6,5 +6,30 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'app';
+  public imageUrl = 'assets/implentation-plan-example-picture.png';
+  public isShowingResult: boolean;
+
+  private canvas;
+
+  constructor() {
+    this.isShowingResult = false;
+  }
+
+  get resultJson(): string {
+    return JSON.stringify(this.canvas.toJSON());
+  }
+
+  get resultImgUri() {
+    return this.canvas.toDataURL();
+  }
+
+  public updateCanvas($event) {
+    console.log('receive');
+    console.log($event);
+    this.canvas = $event;
+  }
+
+  public showResult() {
+    this.isShowingResult = true;
+  }
 }
