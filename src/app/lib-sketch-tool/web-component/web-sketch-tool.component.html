@@ -1,114 +1,128 @@
-<div class="row">
-    <div class="column">
-        <form>
-            <button
-                color="accent"
-                (click)="crop()"
-                [disabled]="isDrawing"
-            >
-                <i class="fa fa-crop"></i>
-            </button>
-
-            <button
-                (click)="addShape('Rectangle')"
-                [disabled]="isDrawing"
-            >
-                <i class="fa fa-square"></i>
-            </button>
-
-            <button
-                (click)="addShape('Circle')"
-                [disabled]="isDrawing"
-            >
-                <i class="fa fa-circle"></i>
-            </button>
-
-            <button
-                (click)="addShape('Line')"
-                [disabled]="isDrawing"
-            >
-                <i class="fa fa-minus"></i>
-            </button>
-
-            <button
-                (click)="addText()"
-                [disabled]="isDrawing"
-            >
-                <i class="fa fa-font"></i>
-            </button>
-
-            <button
-                color="accent"
-                (click)="bringFoward()"
-                [disabled]="isDrawing"
-            >
-                <i class="fa fa-angle-up"></i>
-            </button>
-
-            <div class="separator"></div>
-
-            <button (click)="saveImage()">
-                <i class="fa fa-download"></i>
-            </button>
-
-        </form>
-    </div>
-
-    <div class="column">
-        <form>
-            <button (click)="draw()">
-                <i class="fa fa-pencil"></i>
-            </button>
-
-            <button
-                (click)="addShape('Triangle')"
-                [disabled]="isDrawing"
-            >
-                <i class="fa fa-caret-up"></i>
-            </button>
-
-            <button
-                (click)="group()"
-                [disabled]="isDrawing"
-            >
-                <i class="fa fa-object-group"></i>
-            </button>
-
-            <button
-                (click)="addShape('Cross')"
-                [disabled]="isDrawing"
-            >
-                <i class="fa fa-plus"></i>
-            </button>
-
-            <button
-                (click)="deleteSelection()"
-                [disabled]="isDrawing"
-            >
-                <i class="fa fa-trash"></i>
-            </button>
-
-            <button
-                color="accent"
-                (click)="sendToBack()"
-                [disabled]="isDrawing"
-            >
-                <i class="fa fa-angle-down"></i>
-            </button>
-
-
-            <div class="separator"></div>
-
-        </form>
-    </div>
-
-    <div
-        class="column"
-        appCanvasDirective
-        (mouseDown)="mouseDown($event)"
-        (mouseMove)="mouseMove($event)"
-        (mouseUp)="mouseUp($event)"
-    >
-        <canvas id="canvas"></canvas>
-    </div>
+<div
+    class="div-canvas-container"
+    appCanvasDirective
+    (mouseDown)="mouseDown($event)"
+    (mouseMove)="mouseMove($event)"
+    (mouseUp)="mouseUp($event)"
+>
+    <canvas id="canvas"></canvas>
 </div>
+
+<mat-toolbar class="edit-toolbar">
+    <button
+        mat-button
+        class="tool-button"
+        (click)="addShape('Rectangle')"
+        [disabled]="isDrawing"
+    >
+        <i class="fa fa-square"></i>
+    </button>
+
+    <button
+        mat-button
+        class="tool-button"
+        (click)="addShape('Circle')"
+        [disabled]="isDrawing"
+    >
+        <i class="fa fa-circle"></i>
+    </button>
+
+    <button
+        mat-button
+        class="tool-button"
+        (click)="addShape('Triangle')"
+        [disabled]="isDrawing"
+    >
+        <i class="fa fa-caret-up"></i>
+    </button>
+
+    <button
+        mat-button
+        class="tool-button"
+        (click)="addShape('Line')"
+        [disabled]="isDrawing"
+    >
+        <i class="fa fa-minus"></i>
+    </button>
+
+    <button
+        mat-button
+        class="tool-button"
+        (click)="addText()"
+        [disabled]="isDrawing"
+    >
+        <i class="fa fa-font"></i>
+    </button>
+
+    <button
+        mat-button
+        class="tool-button"
+        color="accent"
+        (click)="bringFoward()"
+        [disabled]="isDrawing"
+    >
+        <i class="fa fa-angle-up"></i>
+    </button>
+
+    <button
+        mat-button
+        class="tool-button"
+        color="accent"
+        (click)="crop()"
+        [disabled]="isDrawing"
+    >
+        <i class="fa fa-crop"></i>
+    </button>
+
+    <button
+        mat-button
+        (click)="draw()"
+        class="tool-button"
+    >
+        <i class="fa fa-pencil"></i>
+    </button>
+
+    <button
+        mat-button
+        class="tool-button"
+        (click)="group()"
+        [disabled]="isDrawing"
+    >
+        <i class="fa fa-object-group"></i>
+    </button>
+
+    <button
+        mat-button
+        class="tool-button"
+        (click)="deleteSelection()"
+        [disabled]="isDrawing"
+    >
+        <i class="fa fa-trash"></i>
+    </button>
+
+    <button
+        mat-button
+        (click)="saveImage()"
+        class="tool-button"
+    >
+        <i class="fa fa-download"></i>
+    </button>
+
+    <button
+        mat-button
+        class="tool-button"
+        color="accent"
+        (click)="sendToBack()"
+        [disabled]="isDrawing"
+    >
+        <i class="fa fa-angle-down"></i>
+    </button>
+
+    <input
+        mat-button
+        class="colorPicker"
+        [(colorPicker)]="strokeColor"
+        [style.background]="strokeColor"
+        (colorPickerChange)="changeStrokeColor()"
+    >
+</mat-toolbar>
