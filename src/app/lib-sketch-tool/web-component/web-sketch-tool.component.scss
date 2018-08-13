@@ -1,63 +1,40 @@
+.div-canvas-container {
+  text-align: center;
+  margin: 0px auto;
+  padding: 0px auto;
+  height: 90% !important;
+  width: 100% !important;
+  object-fit: contain;
+}
+
+.edit-toolbar {
+  height: 7%;
+  justify-content: center;
+}
+ 
 .toolbar-button {
     font-family: FontAwesome;
     display: inline-block;
-    width: 2em;
+    width: 1.5em;
     min-width: 0;
-  }
-  
-  .column {
-    float: left;
-    width: auto;
-    padding-top: 0.5em;
-    padding-left: 0.5em;
-  }
-  
-  .row:after {
-    content: "";
-    display: table;
-    clear: both;
-  }
-  
-  form {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-  }
-  
-  form button {
-    width: 40px;
-    height: 40px;
-    margin: 0 auto;
-    margin-top: 8px;
-  }
-  
-  ul {
-    padding: 0;
-    margin: 0;
-  }
-  
-  li {
-    list-style-type: none;
-    overflow: hidden;
-    display: flex;
-    text-decoration: none;
-    float: left;
-    padding:1px;
-  }
-  
-  img {
-    width: 40px;
-    height: 40px;
-    padding: 1px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-  }
-  
-  .separator {
-    padding: 10px;
-  }
-  
-  i {
-    font-size: 1.5em;
-  }
+}
+
+.mat-button.tool-button {
+  min-width: 40px !important;
+  width: 50px;
+  min-height: 40px !important;
+  height: 40px;
+  margin-right: 10px;
+}
+
+.colorPicker {
+  width: 40px;
+  height: 36px;
+  margin-top: 3px;
+  color: transparent;
+}
+
+i {
+  font-size: 1.5em;
+}
   

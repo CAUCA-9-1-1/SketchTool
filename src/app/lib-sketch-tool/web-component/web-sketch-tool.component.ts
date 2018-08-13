@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, HostListener } from '@angular/core';
+import { Component, OnInit, Input, HostListener, Output, OnChanges, EventEmitter } from '@angular/core';
 import { forEach } from '@angular/router/src/utils/collection';
 import { CanvasManagerService } from './../services/canvas-manager.service';
 import { AvailableGeometricShape } from './../constants/available-geometric-shapes';
@@ -6,6 +6,7 @@ import { KEY_CODE } from './../constants/key-code';
 import { fabric } from 'fabric';
 
 const Black = '#000000';
+const Transparent = 'transparent';
 
 @Component({
   selector: 'lib-web-sketch-tool',
@@ -23,23 +24,45 @@ export class WebSketchToolComponent implements OnInit {
   public isCropping: boolean;
   public isLastImage: boolean;
 
-  @Input() public imgUrl: string;
+  private isLoaded: boolean;
+  private previousImageData: string;
+
+  @Input() public imageData: string;
+  @Input() public loadedJson: string;
+
+  @Output() public canvas = new EventEmitter<fabric.Canvas>();
+
+  private currentJson: JSON;
+  private previousJson: JSON;
 
   constructor(private canvasManagerService: CanvasManagerService) {
     this.strokeColor = Black;
-    this.isDrawing = false;
+    this.fillColor = Transparent;
     this.isCropping = false;
-    this.isLastImage = false;
+    this.isLoaded = false;
+    // this.isUndoAvailable = false;
   }
 
   ngOnInit() {
-    this.canvasManagerService.emptyCanvas();
-    this.canvasManagerService.setBackgroundFromURL(this.imgUrl);
-    this.isDrawing = false;
+    if (this.imageData) {
+      this.canvasManagerService.emptyCanvas();
+      if (this.loadedJson == null || this.loadedJson.length < 10) {
+        this.canvasManagerService.setBackgroundFromURL(this.imageData);
+      } else {
+        this.previousJson = JSON.parse(this.loadedJson);
+        this.currentJson = this.previousJson;
+        this.canvasManagerService
+          .loadfromJson(JSON.parse(this.loadedJson));
+      }
+      this.isLoaded = true;
+      this.previousImageData = this.imageData;
+    }
+    this.emitCanvas();
   }
 
   public addText() {
     this.canvasManagerService.addText(this.strokeColor, ' ');
+    this.emitCanvas();
   }
 
   public addShape(shape: string) {
@@ -48,15 +71,7 @@ export class WebSketchToolComponent implements OnInit {
       this.fillColor,
       AvailableGeometricShape[shape]
     );
-  }
-
-  public addImage(source: string) {
-    if (!this.isDrawing) {
-    }
-  }
-
-  public changeFillColor() {
-    this.canvasManagerService.changeSelectedObjectsFillColor(this.fillColor);
+    this.emitCanvas();
   }
 
   public changeStrokeColor() {
@@ -64,14 +79,17 @@ export class WebSketchToolComponent implements OnInit {
       this.strokeColor
     );
     this.canvasManagerService.setFreeDrawingBrushColor(this.strokeColor);
+    this.emitCanvas();
   }
 
   public bringFoward() {
     this.canvasManagerService.bringSelectedObjectsToFront();
+    this.emitCanvas();
   }
 
   public sendToBack() {
     this.canvasManagerService.sendSelectedObjectsToBack();
+    this.emitCanvas();
   }
 
   public draw() {
@@ -96,6 +114,7 @@ export class WebSketchToolComponent implements OnInit {
     this.isCropping = true;
     this.canvasManagerService.disableSelection();
     this.canvasManagerService.addSelectionRectangle();
+    this.emitCanvas();
   }
 
   @HostListener('window:keyup', ['$event'])
@@ -103,10 +122,12 @@ export class WebSketchToolComponent implements OnInit {
     if (event.keyCode === KEY_CODE.DELETE) {
       this.deleteSelection();
     }
+    this.emitCanvas();
   }
 
   public deleteSelection() {
     this.canvasManagerService.deleteSelectedObjects();
+    this.emitCanvas();
   }
 
   public mouseUp(event) {
@@ -114,6 +135,7 @@ export class WebSketchToolComponent implements OnInit {
       this.canvasManagerService.cropImage();
       this.isCropping = false;
     }
+    this.emitCanvas();
   }
 
   public mouseMove(event) {
@@ -130,5 +152,10 @@ export class WebSketchToolComponent implements OnInit {
 
   public group() {
     this.canvasManagerService.groupSelectedObjects();
+    this.emitCanvas();
+  }
+
+  public emitCanvas() {
+    this.canvas.emit(this.canvasManagerService.canvas);
   }
 }
