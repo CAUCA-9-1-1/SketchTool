@@ -32,15 +32,11 @@ export class WebSketchToolComponent implements OnInit {
 
   @Output() public canvas = new EventEmitter<fabric.Canvas>();
 
-  private currentJson: JSON;
-  private previousJson: JSON;
-
   constructor(private canvasManagerService: CanvasManagerService) {
     this.strokeColor = Black;
     this.fillColor = Transparent;
     this.isCropping = false;
     this.isLoaded = false;
-    // this.isUndoAvailable = false;
   }
 
   ngOnInit() {
@@ -49,9 +45,7 @@ export class WebSketchToolComponent implements OnInit {
       if (this.loadedJson == null || this.loadedJson.length < 10) {
         this.canvasManagerService.setBackgroundFromURL(this.imageData);
       } else {
-        this.previousJson = JSON.parse(this.loadedJson);
-        this.currentJson = this.previousJson;
-        this.canvasManagerService
+          this.canvasManagerService
           .loadfromJson(JSON.parse(this.loadedJson));
       }
       this.isLoaded = true;
@@ -114,7 +108,6 @@ export class WebSketchToolComponent implements OnInit {
     this.isCropping = true;
     this.canvasManagerService.disableSelection();
     this.canvasManagerService.addSelectionRectangle();
-    this.emitCanvas();
   }
 
   @HostListener('window:keyup', ['$event'])
@@ -138,15 +131,15 @@ export class WebSketchToolComponent implements OnInit {
     this.emitCanvas();
   }
 
-  public mouseMove(event) {
+  public mouseMove(event: MouseEvent) {
     if (this.isCropping) {
-      this.canvasManagerService.ajustCropRectangle(event);
+      this.canvasManagerService.ajustCropRectangleFromMouse(event);
     }
   }
 
-  public mouseDown(event) {
+  public mouseDown(event: MouseEvent) {
     if (this.isCropping) {
-      this.canvasManagerService.startSelectingCropRectangle(event);
+      this.canvasManagerService.startSelectingCropRectangleFromMouse(event);
     }
   }
 
