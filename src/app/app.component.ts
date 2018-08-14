@@ -24,8 +24,6 @@ export class AppComponent {
   }
 
   public updateCanvas($event) {
-    console.log('receive');
-    console.log($event);
     this.canvas = $event;
   }
 
