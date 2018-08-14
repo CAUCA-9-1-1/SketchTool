@@ -14,7 +14,7 @@
         (click)="addShape('Rectangle')"
         [disabled]="isDrawing"
     >
-        <i class="fa fa-square"></i>
+        <i class="fas fa-square"></i>
     </button>
 
     <button
@@ -23,7 +23,7 @@
         (click)="addShape('Circle')"
         [disabled]="isDrawing"
     >
-        <i class="fa fa-circle"></i>
+        <i class="fas fa-circle"></i>
     </button>
 
     <button
@@ -32,7 +32,7 @@
         (click)="addShape('Triangle')"
         [disabled]="isDrawing"
     >
-        <i class="fa fa-caret-up"></i>
+        <i class="fas fa-caret-up"></i>
     </button>
 
     <button
@@ -41,7 +41,7 @@
         (click)="addShape('Line')"
         [disabled]="isDrawing"
     >
-        <i class="fa fa-minus"></i>
+        <i class="fas fa-minus"></i>
     </button>
 
     <button
@@ -50,17 +50,7 @@
         (click)="addText()"
         [disabled]="isDrawing"
     >
-        <i class="fa fa-font"></i>
-    </button>
-
-    <button
-        mat-button
-        class="tool-button"
-        color="accent"
-        (click)="bringFoward()"
-        [disabled]="isDrawing"
-    >
-        <i class="fa fa-angle-up"></i>
+        <i class="fas fa-font"></i>
     </button>
 
     <button
@@ -70,7 +60,7 @@
         (click)="crop()"
         [disabled]="isDrawing"
     >
-        <i class="fa fa-crop"></i>
+        <i class="fas fa-crop"></i>
     </button>
 
     <button
@@ -78,7 +68,7 @@
         (click)="draw()"
         class="tool-button"
     >
-        <i class="fa fa-pencil"></i>
+        <i class="fas fa-pencil-alt"></i>
     </button>
 
     <button
@@ -87,24 +77,17 @@
         (click)="group()"
         [disabled]="isDrawing"
     >
-        <i class="fa fa-object-group"></i>
+        <i class="fas fa-object-group"></i>
     </button>
 
     <button
         mat-button
         class="tool-button"
-        (click)="deleteSelection()"
+        color="accent"
+        (click)="bringFoward()"
         [disabled]="isDrawing"
     >
-        <i class="fa fa-trash"></i>
-    </button>
-
-    <button
-        mat-button
-        (click)="saveImage()"
-        class="tool-button"
-    >
-        <i class="fa fa-download"></i>
+        <i class="fas fa-angle-up"></i>
     </button>
 
     <button
@@ -114,7 +97,24 @@
         (click)="sendToBack()"
         [disabled]="isDrawing"
     >
-        <i class="fa fa-angle-down"></i>
+        <i class="fas fa-angle-down"></i>
+    </button>
+
+    <button
+        mat-button
+        class="tool-button"
+        (click)="deleteSelection()"
+        [disabled]="isDrawing"
+    >
+        <i class="fas fa-trash"></i>
+    </button>
+
+    <button
+        mat-button
+        (click)="saveImage()"
+        class="tool-button"
+    >
+        <i class="fas fa-download"></i>
     </button>
 
     <input

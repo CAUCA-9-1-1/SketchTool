@@ -41,7 +41,6 @@
     "codelyzer": "^4.0.1",
     "core-js": "^2.4.1",
     "fabric": "^2.3.3",
-    "font-awesome": "^4.7.0",
     "ionic-angular": "^3.9.2",
     "jasmine-core": "~2.8.0",
     "jasmine-spec-reporter": "~4.2.1",
