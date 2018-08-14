@@ -1,8 +1,10 @@
-import { Component, Input, Output, OnInit, OnChanges, EventEmitter, transition} from '@angular/core';
+import { Component, Input, Output, OnInit, OnChanges, AfterViewInit, EventEmitter, transition, ElementRef, ViewChild, OnDestroy } from '@angular/core';
 import { ActionSheetController } from 'ionic-angular';
+import { Gesture } from 'ionic-angular/gestures/gesture';
 import { AvailableGeometricShape } from './../constants/available-geometric-shapes';
 import { CanvasManagerService } from './../services/canvas-manager.service';
-import { TranslateService } from '@ngx-translate/core';
+import { fabric } from 'fabric';
+import { TranslateService } from "@ngx-translate/core";
 
 const Black = '#000000';
 const Transparent = 'transparent';
@@ -13,7 +15,10 @@ const Transparent = 'transparent';
   styleUrls: ['./mobile-sketch-tool.component.scss'],
   providers: [CanvasManagerService]
 })
-export class MobileSketchToolComponent implements OnInit, OnChanges {
+export class MobileSketchToolComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
+  private gesture: Gesture;
+  @ViewChild('pinchElement') element;
+
   public fillColor: string;
   public strokeColor: string;
   public isCropping: boolean;
@@ -29,6 +34,7 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
   @Output() public canvas = new EventEmitter<fabric.Canvas>();
 
   private isLoaded: boolean;
+  private isPanning: boolean;
   private previousImageData: string;
   private currentJson: JSON;
   private previousJson: JSON;
@@ -78,6 +84,27 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
       }
     }
     this.emitCanvas();
+  }
+
+  ngAfterViewInit() {
+    console.log('ionViewDidLoad');
+    //create gesture obj w/ ref to DOM element
+    this.gesture = new Gesture(this.element.nativeElement);
+    console.log(this.gesture);
+  
+    //listen for the gesture
+    this.gesture.listen();
+  
+    //turn on listening for pinch or rotate events
+    this.gesture.on('pinch', $event => this.pinch($event));
+  }
+
+  ngOnDestroy() {
+    this.gesture.destroy();
+}
+  
+  private pinchEvent(event) {
+      this.canvasManagerService.emptyCanvas();
   }
 
   get hasPictograms(): boolean {
@@ -154,6 +181,22 @@ export class MobileSketchToolComponent implements OnInit, OnChanges {
     if (this.isCropping) {
       this.canvasManagerService.startSelectingCropRectangle(event);
     }
+  }
+
+  public pan(event) {
+    if (!this.isCropping) {
+      this.isPanning = true;
+      if (this.isPanning && event && event.e) {
+        this.canvasManagerService.panCanvas(event);
+      }
+      this.isPanning = false;
+    }
+  }
+
+  public pinch(event){
+    event.preventDefault(); 
+    console.log(event);
+    this.canvasManagerService.zoom(event);
   }
 
   public group() {
