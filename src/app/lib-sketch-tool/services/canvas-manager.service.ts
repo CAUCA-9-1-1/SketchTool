@@ -22,6 +22,7 @@ export class CanvasManagerService {
   private cropRectangle: fabric.Rect;
   private mousePosition: Position;
   private cropStartingPosition: Position;
+  private zoomStartScale: number;
 
   constructor() {
     this.emptyCanvas();
@@ -628,5 +629,30 @@ export class CanvasManagerService {
 
       this.canvas.renderAll();
     }
+  }
+
+  public panCanvas(event): void {
+    const units = 10;
+    const delta = new fabric.Point(event.e.movementX, event.e.movementY);
+    this.canvas.relativePan(delta);
+  }
+
+  public zoom(event): void {
+    // Get event point
+    const point = new fabric.Point(event.srcEvent.clientX, event.srcEvent.clientY);
+    // Remember canvas scale at gesture start
+    if (!this.zoomStartScale) {
+      this.zoomStartScale = this.canvas.getZoom();
+    }
+    // Calculate delta from start scale
+    const delta = this.zoomStartScale * event.scale;
+    console.log('delta');
+    console.log(this.zoomStartScale);
+    console.log(event.scale);
+    console.log(delta);
+
+    // Zoom to pinch point
+    this.canvas.zoomToPoint(point, delta);
+    this.canvas.renderAll();
   }
 }
