@@ -1,3 +1,4 @@
+import {HttpService} from './../../providers/Base/http.service';
 import { Injectable } from '@angular/core';
 import { fabric } from 'fabric';
 
@@ -22,7 +23,7 @@ export class CanvasManagerService {
   private cropRectangle: fabric.Rect;
   private mousePosition: Position;
   private cropStartingPosition: Position;
-  private zoomStartScale: number;
+  private lastPanPosition: fabric.Point;
 
   constructor() {
     this.emptyCanvas();
@@ -628,28 +629,62 @@ export class CanvasManagerService {
     }
   }
 
-  public panCanvas(event): void {
-    const norm = Math.sqrt(Math.abs(event.deltaX) + Math.abs(event.deltaY));
-    let x = event.deltaX / norm;
-    let y = event.deltaY / norm;
+  public setLastPanPosition(event) {
+    this.lastPanPosition = new fabric.Point(event.touches[0].clientX, event.touches[0].clientY);
+  }
 
-    const delta = new fabric.Point(x, y);
+  public panCanvas(event): void {
+    const delta = new fabric.Point(
+      event.touches[0].clientX - this.lastPanPosition.x,
+      event.touches[0].clientY - this.lastPanPosition.y
+    )
 
     this.canvas.relativePan(delta);
+    this.preventPanOutsideCanvas();
+
     this.canvas.renderAll();
+    this.setLastPanPosition(event);
+  }
+
+  private preventPanOutsideCanvas() {
+    const canvasViewPort = this.canvas.viewportTransform;
     
+    const imageHeight = this.canvas.height * canvasViewPort[0];
+    const imageWidth = this.canvas.width * canvasViewPort[0];
+
+    const bottomEndPoint = this.canvas.height * (canvasViewPort[0] - 1);
+    if (canvasViewPort[5] >= 0 || -bottomEndPoint > canvasViewPort[5]) {
+        canvasViewPort[5] = (canvasViewPort[5] >= 0) ? 0 : -bottomEndPoint;
+    }
+
+    const rightEndPoint = this.canvas.width * (canvasViewPort[0] - 1);
+    if (canvasViewPort[4] >= 0 || -rightEndPoint > canvasViewPort[4]) {
+        canvasViewPort[4] = (canvasViewPort[4] >= 0) ? 0 : -rightEndPoint;
+    }
   }
 
   public zoom(event): void {
-    // Get event point
-    const point = new fabric.Point(event.srcEvent.clientX, event.srcEvent.clientY);
-    // Remember canvas scale at gesture start
-    if (!this.zoomStartScale) {
-      this.zoomStartScale = this.canvas.getZoom();
-    }
-    const delta = this.zoomStartScale * event.scale;
+    const point = new fabric.Point(event.center.x, event.center.y);
 
-    this.canvas.zoomToPoint(point, delta);
+    let zoom = this.canvas.getZoom();
+    if (event.additionalEvent === 'pinchout') {
+      zoom *= 1.05;
+    }
+    if (event.additionalEvent === 'pinchin') {
+      zoom /= 1.05;
+    }
+
+    if (zoom < 1) {
+      zoom = 1;
+      this.canvas.zoomToPoint(new fabric.Point(0, 0), zoom);
+      this.canvas.absolutePan(new fabric.Point(0, 0));
+    } else {
+      if(zoom > 10) {
+        zoom = 10;
+      }
+      this.canvas.zoomToPoint(point, zoom);
+    }
+
     this.canvas.renderAll();
   }
 }
