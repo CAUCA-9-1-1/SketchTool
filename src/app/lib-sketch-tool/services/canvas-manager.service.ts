@@ -256,9 +256,6 @@ export class CanvasManagerService {
             scaleY: scaleData.scaleFactor
           });
 
-          canvas.setWidth(f_img.width * scaleData.scaleFactor);
-          canvas.setHeight(f_img.height * scaleData.scaleFactor);
-
           canvas.renderAll();
           resolve();
         };
@@ -632,9 +629,15 @@ export class CanvasManagerService {
   }
 
   public panCanvas(event): void {
-    const units = 10;
-    const delta = new fabric.Point(event.e.movementX, event.e.movementY);
+    const norm = Math.sqrt(Math.abs(event.deltaX) + Math.abs(event.deltaY));
+    let x = event.deltaX / norm;
+    let y = event.deltaY / norm;
+
+    const delta = new fabric.Point(x, y);
+
     this.canvas.relativePan(delta);
+    this.canvas.renderAll();
+    
   }
 
   public zoom(event): void {
@@ -644,14 +647,8 @@ export class CanvasManagerService {
     if (!this.zoomStartScale) {
       this.zoomStartScale = this.canvas.getZoom();
     }
-    // Calculate delta from start scale
     const delta = this.zoomStartScale * event.scale;
-    console.log('delta');
-    console.log(this.zoomStartScale);
-    console.log(event.scale);
-    console.log(delta);
 
-    // Zoom to pinch point
     this.canvas.zoomToPoint(point, delta);
     this.canvas.renderAll();
   }
