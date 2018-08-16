@@ -25,6 +25,7 @@ export class MobileSketchToolComponent implements OnInit, OnChanges, AfterViewIn
   public isUndoAvailable: boolean;
   public isSelectingColor: boolean;
   public isDrawing: boolean;
+  public isPanning: boolean;
 
   @Input() public imageData: string;
   @Input() public loadedJson: string;
@@ -34,7 +35,6 @@ export class MobileSketchToolComponent implements OnInit, OnChanges, AfterViewIn
   @Output() public canvas = new EventEmitter<fabric.Canvas>();
 
   private isLoaded: boolean;
-  private isPanning: boolean;
   private previousImageData: string;
   private currentJson: JSON;
   private previousJson: JSON;
@@ -47,6 +47,7 @@ export class MobileSketchToolComponent implements OnInit, OnChanges, AfterViewIn
     this.strokeColor = Black;
     this.fillColor = Transparent;
     this.isCropping = false;
+    this.isPanning = false;
     this.isLoaded = false;
     this.isUndoAvailable = false;
     this.isSelectingColor = false;
@@ -94,10 +95,6 @@ export class MobileSketchToolComponent implements OnInit, OnChanges, AfterViewIn
 
   ngOnDestroy() {
     this.gesture.destroy();
-}
-
-  private pinchEvent(event) {
-      this.canvasManagerService.emptyCanvas();
   }
 
   get hasPictograms(): boolean {
@@ -167,7 +164,7 @@ export class MobileSketchToolComponent implements OnInit, OnChanges, AfterViewIn
   public mouseMove(event) {
     if (this.isCropping) {
       this.canvasManagerService.ajustCropRectangle(event);
-    } else if (event.touches.length === 3) {
+    } else if (this.isPanning) {
         this.canvasManagerService.panCanvas(event);
     }
   }
@@ -175,13 +172,14 @@ export class MobileSketchToolComponent implements OnInit, OnChanges, AfterViewIn
   public mouseDown(event) {
     if (this.isCropping) {
       this.canvasManagerService.startSelectingCropRectangle(event);
-    } else if (event.touches.length === 3) {
+    } else if (this.isPanning) {
         this.canvasManagerService.setLastPanPosition(event);
     }
   }
 
   public pinch(event) {
     event.preventDefault();
+    this.disableDrawing();
     this.canvasManagerService.zoom(event);
   }
 
@@ -198,6 +196,19 @@ export class MobileSketchToolComponent implements OnInit, OnChanges, AfterViewIn
 
   public onColorClicked() {
     this.isSelectingColor = true;
+    this.stopPanning();
+  }
+
+  public onMoveClicked() {
+    this.isPanning = !this.isPanning;
+    (this.isPanning) ? this.canvasManagerService.disableSelection() : this.canvasManagerService.enableSlection();
+  }
+
+  public stopPanning() {
+    if (this.isPanning) {
+      this.isPanning = false;
+      this.canvasManagerService.enableSlection();
+    }
   }
 
   public setColor(color: string) {
