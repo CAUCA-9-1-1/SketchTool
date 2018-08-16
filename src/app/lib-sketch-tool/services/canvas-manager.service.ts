@@ -545,14 +545,18 @@ export class CanvasManagerService {
     this.canvas.backgroundImage.top *= scaleFactor;
 
     this.moveAllObjectsInCanvas(-1 * left, -1 * top, scaleFactor);
-
-    this.canvas.selectable = true;
-    this.canvas.selection = true;
+    
+    this.enableSlection();
     this.cropRectangle.visible = false;
 
     this.canvas.remove(this.cropRectangle);
 
     this.canvas.renderAll();
+  }
+
+  public enableSlection() {
+    this.canvas.selectable = true;
+    this.canvas.selection = true;
   }
 
   public ajustCropRectangle(event): boolean {
@@ -643,7 +647,7 @@ export class CanvasManagerService {
     const delta = new fabric.Point(
       event.touches[0].clientX - this.lastPanPosition.x,
       event.touches[0].clientY - this.lastPanPosition.y
-    )
+    );
 
     this.canvas.relativePan(delta);
     this.preventPanOutsideCanvas();
@@ -654,9 +658,6 @@ export class CanvasManagerService {
 
   private preventPanOutsideCanvas() {
     const canvasViewPort = this.canvas.viewportTransform;
-    
-    const imageHeight = this.canvas.height * canvasViewPort[0];
-    const imageWidth = this.canvas.width * canvasViewPort[0];
 
     const bottomEndPoint = this.canvas.height * (canvasViewPort[0] - 1);
     if (canvasViewPort[5] >= 0 || -bottomEndPoint > canvasViewPort[5]) {
@@ -670,28 +671,27 @@ export class CanvasManagerService {
   }
 
   public zoom(event): void {
-    const point = new fabric.Point(event.center.x, event.center.y);
+    if (Math.abs(event.overallVelocity) > 0.005) {
+      const point = new fabric.Point(event.center.x, event.center.y);
 
-    let zoom = this.canvas.getZoom();
-    if (event.additionalEvent === 'pinchout') {
-      zoom *= 1.05;
-    }
-    if (event.additionalEvent === 'pinchin') {
-      zoom /= 1.05;
-    }
-
-    if (zoom < 1) {
-      zoom = 1;
-      this.canvas.zoomToPoint(new fabric.Point(0, 0), zoom);
-      this.canvas.absolutePan(new fabric.Point(0, 0));
-    } else {
-      if(zoom > 10) {
-        zoom = 10;
+      let zoom = this.canvas.getZoom();
+      let scaleFactor = zoom * event.scale;
+      zoom = zoom + (event.scale - zoom) / 20;
+  
+  
+      if (zoom < 1) {
+        zoom = 1;
+        this.canvas.zoomToPoint(new fabric.Point(0, 0), zoom);
+        this.canvas.absolutePan(new fabric.Point(0, 0));
+      } else {
+        if (zoom > 10) {
+          zoom = 10;
+        }
+        this.canvas.zoomToPoint(point, zoom);
       }
-      this.canvas.zoomToPoint(point, zoom);
-    }
-
+  
       this.setFreeDrawingBrushWidthFromZoom(zoom);
-    this.canvas.renderAll();
+      this.canvas.renderAll();
+    }
   }
 }
