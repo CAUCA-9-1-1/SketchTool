@@ -194,7 +194,14 @@ export class CanvasManagerService {
 
   public setFreeDrawingBrushColor(color: string): void {
     this.canvas.freeDrawingBrush.color = color;
-    this.canvas.freeDrawingBrush.width = SHAPE_DATA.freeDrawingBrushWidth;
+    this.setFreeDrawingBrushWidthFromZoom(this.canvas.getZoom());
+  }
+
+  private setFreeDrawingBrushWidthFromZoom(zoom: number) {
+    console.log(SHAPE_DATA.freeDrawingBrushWidth);
+    console.log(zoom);
+    this.canvas.freeDrawingBrush.width = SHAPE_DATA.freeDrawingBrushWidth * (1 / zoom);
+    console.log(this.canvas.freeDrawingBrush.width);
   }
 
   public addText(color: string, inputText: string): void {
@@ -684,6 +691,7 @@ export class CanvasManagerService {
       this.canvas.zoomToPoint(point, zoom);
     }
 
+      this.setFreeDrawingBrushWidthFromZoom(zoom);
     this.canvas.renderAll();
   }
 }
