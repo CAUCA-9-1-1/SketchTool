@@ -87,22 +87,15 @@ export class MobileSketchToolComponent implements OnInit, OnChanges, AfterViewIn
   }
 
   ngAfterViewInit() {
-    console.log('ionViewDidLoad');
-    //create gesture obj w/ ref to DOM element
     this.gesture = new Gesture(this.element.nativeElement);
-    console.log(this.gesture);
-  
-    //listen for the gesture
     this.gesture.listen();
-  
-    //turn on listening for pinch or rotate events
     this.gesture.on('pinch', $event => this.pinch($event));
   }
 
   ngOnDestroy() {
     this.gesture.destroy();
 }
-  
+
   private pinchEvent(event) {
       this.canvasManagerService.emptyCanvas();
   }
@@ -174,28 +167,21 @@ export class MobileSketchToolComponent implements OnInit, OnChanges, AfterViewIn
   public mouseMove(event) {
     if (this.isCropping) {
       this.canvasManagerService.ajustCropRectangle(event);
+    } else if (event.touches.length === 3) {
+        this.canvasManagerService.panCanvas(event);
     }
   }
 
   public mouseDown(event) {
     if (this.isCropping) {
       this.canvasManagerService.startSelectingCropRectangle(event);
+    } else if (event.touches.length === 3) {
+        this.canvasManagerService.setLastPanPosition(event);
     }
   }
 
-  public pan(event) {
-    if (!this.isCropping) {
-      this.isPanning = true;
-      if (this.isPanning && event && event.e) {
-        this.canvasManagerService.panCanvas(event);
-      }
-      this.isPanning = false;
-    }
-  }
-
-  public pinch(event){
-    event.preventDefault(); 
-    console.log(event);
+  public pinch(event) {
+    event.preventDefault();
     this.canvasManagerService.zoom(event);
   }
 

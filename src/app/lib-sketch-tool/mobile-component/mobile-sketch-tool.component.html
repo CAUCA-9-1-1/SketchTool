@@ -1,12 +1,10 @@
 <ion-content>
     <div
         class="div-canvas-container"
-        (pan)="pan($event)"
-        #pinchElement
+        (touchstart)="mouseDown($event)"
+        (touchmove)="mouseMove($event)"
         (touchend)="mouseUp($event)"
-        (mousedown)="mouseDown($event)"
-        (mousemove)="mouseMove($event)"
-        (mouseup)="mouseUp($event)"
+        #pinchElement
     >
         <canvas id="canvas"></canvas>
 

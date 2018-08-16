@@ -1,4 +1,3 @@
-import {HttpService} from './../../providers/Base/http.service';
 import { Injectable } from '@angular/core';
 import { fabric } from 'fabric';
 
