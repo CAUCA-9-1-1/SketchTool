@@ -15,7 +15,7 @@ const Transparent = 'transparent';
   providers: [CanvasManagerService]
 })
 
-export class WebSketchToolComponent implements OnInit {
+export class WebSketchToolComponent implements OnInit, OnChanges {
   public fillColor: string;
   public strokeColor: string;
 
@@ -40,6 +40,16 @@ export class WebSketchToolComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.setCanvas();
+  }
+
+  ngOnChanges() {
+    if (this.isLoaded) {
+      this.setCanvas();
+    }
+  }
+
+  private setCanvas() {
     if (this.imageData) {
       this.canvasManagerService.emptyCanvas();
       if (this.loadedJson == null || this.loadedJson.length < 10) {
