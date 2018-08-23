@@ -3,6 +3,9 @@
   height: 100%;
   width: 100%;
   object-fit: contain;
+  text-align: center; 
+  margin: 0px auto;
+  padding: 0px auto;
 }
 
 .scroll-content {
@@ -33,4 +36,8 @@
 
 #icon {
   color: #B32017;
+}
+
+.col {
+  padding: 10px;
 }

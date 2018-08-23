@@ -198,10 +198,7 @@ export class CanvasManagerService {
   }
 
   private setFreeDrawingBrushWidthFromZoom(zoom: number) {
-    console.log(SHAPE_DATA.freeDrawingBrushWidth);
-    console.log(zoom);
     this.canvas.freeDrawingBrush.width = SHAPE_DATA.freeDrawingBrushWidth * (1 / zoom);
-    console.log(this.canvas.freeDrawingBrush.width);
   }
 
   public addText(color: string, inputText: string): void {
@@ -295,6 +292,10 @@ export class CanvasManagerService {
       top = 0;
       left = -(f_img.width * scaleFactor - canvasWidth) / 2;
     }
+
+    canvas.setWidth(f_img.width * scaleFactor);
+    canvas.setHeight(f_img.height * scaleFactor);
+
     return { scaleFactor: scaleFactor, left: left, top: top };
   }
 
@@ -545,7 +546,7 @@ export class CanvasManagerService {
     this.canvas.backgroundImage.top *= scaleFactor;
 
     this.moveAllObjectsInCanvas(-1 * left, -1 * top, scaleFactor);
-    
+
     this.enableSlection();
     this.cropRectangle.visible = false;
 
@@ -675,10 +676,9 @@ export class CanvasManagerService {
       const point = new fabric.Point(event.center.x, event.center.y);
 
       let zoom = this.canvas.getZoom();
-      let scaleFactor = zoom * event.scale;
       zoom = zoom + (event.scale - zoom) / 20;
-  
-  
+
+
       if (zoom < 1) {
         zoom = 1;
         this.canvas.zoomToPoint(new fabric.Point(0, 0), zoom);
@@ -689,9 +689,14 @@ export class CanvasManagerService {
         }
         this.canvas.zoomToPoint(point, zoom);
       }
-  
+
       this.setFreeDrawingBrushWidthFromZoom(zoom);
       this.canvas.renderAll();
     }
+  }
+
+  public resetZoom() {
+    this.canvas.zoomToPoint(new fabric.Point(0, 0), 1);
+    this.canvas.absolutePan(new fabric.Point(0, 0));
   }
 }
