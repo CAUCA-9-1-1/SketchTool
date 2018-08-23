@@ -4,7 +4,7 @@ import { Gesture } from 'ionic-angular/gestures/gesture';
 import { AvailableGeometricShape } from './../constants/available-geometric-shapes';
 import { CanvasManagerService } from './../services/canvas-manager.service';
 import { fabric } from 'fabric';
-import { TranslateService } from "@ngx-translate/core";
+import { TranslateService } from '@ngx-translate/core';
 
 const Black = '#000000';
 const Transparent = 'transparent';
@@ -140,6 +140,7 @@ export class MobileSketchToolComponent implements OnInit, OnChanges, AfterViewIn
 
   public crop() {
     this.isCropping = true;
+    this.canvasManagerService.resetZoom();
     this.canvasManagerService.disableSelection();
     this.canvasManagerService.addSelectionRectangle();
     this.isUndoAvailable = true;
