@@ -260,6 +260,9 @@ export class CanvasManagerService {
             scaleY: scaleData.scaleFactor
           });
 
+          canvas.setWidth(f_img.width * scaleData.scaleFactor);
+          canvas.setHeight(f_img.height * scaleData.scaleFactor);
+
           canvas.renderAll();
           resolve();
         };
@@ -273,28 +276,25 @@ export class CanvasManagerService {
       'div-canvas-container'
     )[0];
 
-    canvas.setWidth(container.clientWidth);
-    canvas.setHeight(container.clientHeight);
+/*     canvas.setWidth(container.clientWidth);
+    canvas.setHeight(container.clientHeight); */
 
-    const canvasWidth = canvas.getWidth();
-    const canvasHeight = canvas.getHeight();
+/*     const canvasWidth = canvas.getWidth();
+    const canvasHeight = canvas.getHeight(); */
 
-    const canvasAspect = canvasWidth / canvasHeight;
+    const canvasAspect = container.clientWidth / container.clientHeight;
     const imgAspect = f_img.width / f_img.height;
     let left, top, scaleFactor;
 
     if (canvasAspect <= imgAspect) {
-      scaleFactor = canvasWidth / f_img.width;
+      scaleFactor = container.clientWidth / f_img.width;
       left = 0;
-      top = -(f_img.height * scaleFactor - canvasHeight) / 2;
+      top = -(f_img.height * scaleFactor - container.clientHeight) / 2;
     } else {
-      scaleFactor = canvasHeight / f_img.height;
+      scaleFactor = container.clientHeight / f_img.height;
       top = 0;
-      left = -(f_img.width * scaleFactor - canvasWidth) / 2;
+      left = -(f_img.width * scaleFactor - container.clientWidth) / 2;
     }
-
-    canvas.setWidth(f_img.width * scaleFactor);
-    canvas.setHeight(f_img.height * scaleFactor);
 
     return { scaleFactor: scaleFactor, left: left, top: top };
   }
