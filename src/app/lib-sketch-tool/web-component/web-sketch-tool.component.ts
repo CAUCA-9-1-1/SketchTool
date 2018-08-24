@@ -44,24 +44,24 @@ export class WebSketchToolComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges() {
-    if (this.isLoaded) {
       this.setCanvas();
-    }
   }
 
   private setCanvas() {
     if (this.imageData) {
       this.canvasManagerService.emptyCanvas();
+      this.canvasManagerService.resetZoom();
       if (this.loadedJson == null || this.loadedJson.length < 10) {
         this.canvasManagerService.setBackgroundFromURL(this.imageData);
       } else {
-          this.canvasManagerService
-          .loadfromJson(JSON.parse(this.loadedJson));
+          console.log('json loading');
+          this.canvasManagerService.loadfromJson(JSON.parse(this.loadedJson));
       }
       this.isLoaded = true;
       this.previousImageData = this.imageData;
+      this.canvasManagerService.renderCanvas();
+      this.emitCanvas();
     }
-    this.emitCanvas();
   }
 
   public addText() {
