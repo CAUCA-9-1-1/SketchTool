@@ -30,10 +30,6 @@ export class CanvasManagerService {
     this.cropStartingPosition = {x: 0, y: 0};
   }
 
-  get backgroundImage() {
-    return this.canvas;
-  }
-
   get canvasObjects() {
     return this.canvas.getObjects();
   }
@@ -48,6 +44,10 @@ export class CanvasManagerService {
 
   get activeGroup() {
     return this.canvas.getActiveObjects();
+  }
+
+  get divCanvasContainer() {
+    return document.getElementsByClassName('div-canvas-container')[0];
   }
 
   public emptyCanvas(): void {
@@ -276,11 +276,8 @@ export class CanvasManagerService {
       'div-canvas-container'
     )[0];
 
-/*     canvas.setWidth(container.clientWidth);
-    canvas.setHeight(container.clientHeight); */
-
-/*     const canvasWidth = canvas.getWidth();
-    const canvasHeight = canvas.getHeight(); */
+    canvas.setWidth(container.clientWidth);
+    canvas.setHeight(container.clientHeight);
 
     const canvasAspect = container.clientWidth / container.clientHeight;
     const imgAspect = f_img.width / f_img.height;
@@ -368,12 +365,9 @@ export class CanvasManagerService {
   }
 
   public loadfromJson(json: JSON): Promise<void> {
-    const container = document.getElementsByClassName(
-      'div-canvas-container'
-    )[0];
+    const container = this.divCanvasContainer;
 
-    this.canvas.setWidth(container.clientWidth);
-    this.canvas.setHeight(container.clientHeight);
+    this.setCanvasSize(container.clientWidth, container.clientHeight);
 
     return new Promise(
       (resolve, reject): void => {
@@ -387,9 +381,7 @@ export class CanvasManagerService {
   public adjustCanvas(json: JSON): void {
     const backgroundImage = json['backgroundImage'];
 
-    const container = document.getElementsByClassName(
-      'div-canvas-container'
-    )[0];
+    const container = this.divCanvasContainer;
 
     const width = backgroundImage['width'];
     const height = backgroundImage['height'];
@@ -412,8 +404,7 @@ export class CanvasManagerService {
     backgroundImage['scaleX'] = scaleFactor;
     backgroundImage['scaleY'] = scaleFactor;
 
-    this.canvas.setWidth(width * scaleFactor);
-    this.canvas.setHeight(height * scaleFactor);
+    this.setCanvasSize(width * scaleFactor, height * scaleFactor);
 
     const objects = json['objects'];
 
@@ -517,9 +508,7 @@ export class CanvasManagerService {
     const width = this.cropRectangle.width;
     const height = this.cropRectangle.height;
 
-    const container = document.getElementsByClassName(
-      'div-canvas-container'
-    )[0];
+    const container = this.divCanvasContainer;
 
     const canvasWidth = container.clientWidth;
     const canvasHeight = container.clientHeight;
@@ -534,8 +523,7 @@ export class CanvasManagerService {
       scaleFactor = canvasHeight / height;
     }
 
-    this.canvas.setWidth(width * scaleFactor);
-    this.canvas.setHeight(height * scaleFactor);
+    this.setCanvasSize(width * scaleFactor, height * scaleFactor);
 
     this.canvas.backgroundImage.scaleX *= scaleFactor;
     this.canvas.backgroundImage.scaleY *= scaleFactor;
@@ -693,6 +681,11 @@ export class CanvasManagerService {
       this.setFreeDrawingBrushWidthFromZoom(zoom);
       this.canvas.renderAll();
     }
+  }
+
+  private setCanvasSize(width: number, height: number) {
+    this.canvas.setWidth(width);
+    this.canvas.setHeight(height);
   }
 
   public resetZoom() {
