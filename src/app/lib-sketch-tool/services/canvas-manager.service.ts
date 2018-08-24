@@ -241,8 +241,10 @@ export class CanvasManagerService {
   }
 
   public setBackgroundFromURL(backgroundImageURL: string): Promise<void> {
-    const canvas = this.canvas;
-    const resize = this.resizeCanvasAndComputeScaleFactor;
+    const container =  this.divCanvasContainer;
+
+    this.canvas.setWidth(container.clientWidth);
+    this.canvas.setHeight(container.clientHeight);
 
     return new Promise(
       (resolve, reject): void => {
@@ -250,20 +252,20 @@ export class CanvasManagerService {
           return reject();
         }
         const image = new Image();
-        image.onload = function() {
+        image.onload = () => {
           const f_img = new fabric.Image(image, {});
 
-          const scaleData = resize(f_img, canvas);
+          const scaleData = this.computeScaleFactor(f_img, this.canvas);
 
-          canvas.setBackgroundImage(f_img, canvas.renderAll.bind(canvas), {
+          this.canvas.setBackgroundImage(f_img, this.canvas.renderAll.bind(this.canvas), {
             scaleX: scaleData.scaleFactor,
             scaleY: scaleData.scaleFactor
           });
 
-          canvas.setWidth(f_img.width * scaleData.scaleFactor);
-          canvas.setHeight(f_img.height * scaleData.scaleFactor);
+          this.canvas.setWidth(f_img.width * scaleData.scaleFactor);
+          this.canvas.setHeight(f_img.height * scaleData.scaleFactor);
 
-          canvas.renderAll();
+          this.canvas.renderAll();
           resolve();
         };
         image.src = backgroundImageURL;
@@ -271,13 +273,10 @@ export class CanvasManagerService {
     );
   }
 
-  private resizeCanvasAndComputeScaleFactor(f_img: fabric.Image, canvas: fabric.Canvas): ScaleData {
+  private computeScaleFactor(f_img: fabric.Image, canvas: fabric.Canvas): ScaleData {
     const container = document.getElementsByClassName(
       'div-canvas-container'
     )[0];
-
-    canvas.setWidth(container.clientWidth);
-    canvas.setHeight(container.clientHeight);
 
     const canvasAspect = container.clientWidth / container.clientHeight;
     const imgAspect = f_img.width / f_img.height;
