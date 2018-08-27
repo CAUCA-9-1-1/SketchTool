@@ -32,6 +32,10 @@ export class WebSketchToolComponent implements OnInit, OnChanges {
 
   @Output() public canvas = new EventEmitter<fabric.Canvas>();
 
+  get left() {
+    return this.canvasManagerService.left;
+  }
+
   constructor(private canvasManagerService: CanvasManagerService) {
     this.strokeColor = Black;
     this.fillColor = Transparent;
