@@ -18,6 +18,7 @@ interface Position {
 @Injectable()
 export class CanvasManagerService {
   public canvas;
+  public left;
 
   private cropRectangle: fabric.Rect;
   private mousePosition: Position;
@@ -28,6 +29,7 @@ export class CanvasManagerService {
     this.emptyCanvas();
     this.mousePosition = {x: 0, y: 0};
     this.cropStartingPosition = {x: 0, y: 0};
+    this.left = 0;
   }
 
   get canvasObjects() {
@@ -274,9 +276,7 @@ export class CanvasManagerService {
   }
 
   private computeScaleFactor(f_img: fabric.Image, canvas: fabric.Canvas): ScaleData {
-    const container = document.getElementsByClassName(
-      'div-canvas-container'
-    )[0];
+    const container = this.divCanvasContainer;
 
     const canvasAspect = container.clientWidth / container.clientHeight;
     const imgAspect = f_img.width / f_img.height;
@@ -291,6 +291,8 @@ export class CanvasManagerService {
       top = 0;
       left = -(f_img.width * scaleFactor - container.clientWidth) / 2;
     }
+
+    this.left = left;
 
     return { scaleFactor: scaleFactor, left: left, top: top };
   }
@@ -372,6 +374,7 @@ export class CanvasManagerService {
       (resolve, reject): void => {
         this.adjustCanvas(json);
         this.canvas.loadFromJSON(json, this.canvas.renderAll.bind(this.canvas));
+        this.canvas.renderAll();
         resolve();
       }
     );
@@ -390,13 +393,17 @@ export class CanvasManagerService {
 
     const canvasAspect = canvasWidth / canvasHeight;
     const imgAspect = width / height;
-    let scaleFactor;
+    let scaleFactor, left;
 
     if (canvasAspect <= imgAspect) {
       scaleFactor = canvasWidth / width;
+      left = 0;
     } else {
       scaleFactor = canvasHeight / height;
+      left = -(width * scaleFactor - container.clientWidth) / 2;
     }
+
+    this.left = left;
 
     const objectScale = scaleFactor / backgroundImage['scaleX'];
 
