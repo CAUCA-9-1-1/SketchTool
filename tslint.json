@@ -127,6 +127,7 @@
       true,
       "element",
       "app",
+      "lib",
       "kebab-case"
     ],
     "no-output-on-prefix": true,

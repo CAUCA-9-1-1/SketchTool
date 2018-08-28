@@ -52,13 +52,11 @@ export class WebSketchToolComponent implements OnInit, OnChanges {
   }
 
   private setCanvas() {
+    this.canvasManagerService.emptyCanvas();
     if (this.imageData) {
-      this.canvasManagerService.emptyCanvas();
-      this.canvasManagerService.resetZoom();
       if (this.loadedJson == null || this.loadedJson.length < 10) {
         this.canvasManagerService.setBackgroundFromURL(this.imageData);
       } else {
-          console.log('json loading');
           this.canvasManagerService.loadfromJson(JSON.parse(this.loadedJson));
       }
       this.isLoaded = true;
