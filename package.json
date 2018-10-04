@@ -1,6 +1,6 @@
 {
   "name": "lib-sketch-tool",
-  "version": "3.0.0",
+  "version": "3.0.11",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
@@ -15,7 +15,7 @@
   "dependency": {
     "canvas": "^1.6.11",
     "fabric": "^2.3.3",
-    "ngx-color-picker": "^6.6.0"
+    "ngx-color-picker": "^5.3.8"
   },
   "devDependencies": {
     "@angular/animations": "^5.2.0",
@@ -50,7 +50,7 @@
     "karma-jasmine": "~1.1.0",
     "karma-jasmine-html-reporter": "^0.2.2",
     "ng-packagr": "^3.0.2",
-    "ngx-color-picker": "^6.6.0",
+    "ngx-color-picker": "^5.3.8",
     "ngx-loading": "^1.0.14",
     "protractor": "~5.1.2",
     "rxjs": "^5.5.6",
@@ -58,5 +58,6 @@
     "tslint": "~5.9.1",
     "typescript": "~2.5.3",
     "zone.js": "^0.8.19"
-  }
+  },
+  "dependencies": {}
 }
