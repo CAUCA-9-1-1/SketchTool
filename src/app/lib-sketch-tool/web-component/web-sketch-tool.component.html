@@ -8,8 +8,17 @@
 </div>
 
 <mat-toolbar class="edit-toolbar">
-    <button
+    <input
         mat-button
+        class="colorPicker"
+        [(colorPicker)]="strokeColor"
+        [style.background]="strokeColor"
+        (colorPickerChange)="changeStrokeColor()"
+        [cpPositionOffset]='-500'
+        [cpDisableInput]=true
+    >
+
+    <button
         class="tool-button"
         (click)="addShape('Rectangle')"
         [disabled]="isDrawing"
@@ -18,7 +27,6 @@
     </button>
 
     <button
-        mat-button
         class="tool-button"
         (click)="addShape('Circle')"
         [disabled]="isDrawing"
@@ -27,7 +35,6 @@
     </button>
 
     <button
-        mat-button
         class="tool-button"
         (click)="addShape('Triangle')"
         [disabled]="isDrawing"
@@ -36,7 +43,6 @@
     </button>
 
     <button
-        mat-button
         class="tool-button"
         (click)="addShape('Line')"
         [disabled]="isDrawing"
@@ -45,7 +51,6 @@
     </button>
 
     <button
-        mat-button
         class="tool-button"
         (click)="addText()"
         [disabled]="isDrawing"
@@ -54,7 +59,6 @@
     </button>
 
     <button
-        mat-button
         class="tool-button"
         color="accent"
         (click)="crop()"
@@ -64,7 +68,6 @@
     </button>
 
     <button
-        mat-button
         (click)="draw()"
         class="tool-button"
     >
@@ -72,7 +75,6 @@
     </button>
 
     <button
-        mat-button
         class="tool-button"
         (click)="group()"
         [disabled]="isDrawing"
@@ -81,7 +83,6 @@
     </button>
 
     <button
-        mat-button
         class="tool-button"
         color="accent"
         (click)="bringFoward()"
@@ -91,7 +92,6 @@
     </button>
 
     <button
-        mat-button
         class="tool-button"
         color="accent"
         (click)="sendToBack()"
@@ -101,7 +101,6 @@
     </button>
 
     <button
-        mat-button
         class="tool-button"
         (click)="deleteSelection()"
         [disabled]="isDrawing"
@@ -110,18 +109,9 @@
     </button>
 
     <button
-        mat-button
         (click)="saveImage()"
         class="tool-button"
     >
         <i class="fas fa-download"></i>
     </button>
-
-    <input
-        mat-button
-        class="colorPicker"
-        [(colorPicker)]="strokeColor"
-        [style.background]="strokeColor"
-        (colorPickerChange)="changeStrokeColor()"
-    >
 </mat-toolbar>
