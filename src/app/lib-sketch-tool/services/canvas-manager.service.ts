@@ -22,13 +22,11 @@ export class CanvasManagerService {
 
   private cropRectangle: fabric.Rect;
   private mousePosition: Position;
-  private cropStartingPosition: Position;
   private lastPanPosition: fabric.Point;
 
   constructor() {
     this.emptyCanvas();
     this.mousePosition = {x: 0, y: 0};
-    this.cropStartingPosition = {x: 0, y: 0};
     this.left = 0;
   }
 
@@ -439,13 +437,6 @@ export class CanvasManagerService {
     return this.canvas.getObjects().indexOf(activeObject);
   }
 
-  private selectLastObject(): void {
-    const itemNumber = this.canvas.getObjects().length - 1;
-    const object = this.canvas.item(itemNumber);
-    this.canvas.setActiveObject(object);
-    object.enterEditing();
-  }
-
   private markSelectedObjectsDirty(): void {
     const activeObjects = this.canvas.getActiveObjects();
 
@@ -494,8 +485,6 @@ export class CanvasManagerService {
   }
 
   public startSelectingCropRectangleFromMouse(event: MouseEvent): void {
-    this.cropStartingPosition = { x: this.canvas.left, y: this.canvas.top };
-
     this.cropRectangle.left = event.layerX;
     this.cropRectangle.top = event.layerY;
     this.cropRectangle.setCoords();
@@ -580,8 +569,6 @@ export class CanvasManagerService {
   }
 
   public startSelectingCropRectangle(event): void {
-    this.cropStartingPosition = { x: this.canvas.left, y: this.canvas.top };
-
     const touch = event.touches[0];
     const rect = event.target.getBoundingClientRect();
 
