@@ -4,7 +4,7 @@
     (mousemove)="mouseMove($event)"
     (mouseup)="mouseUp($event)"
 >
-    <canvas id="canvas" [ngStyle]="{left: left + 'px'}"></canvas>
+    <canvas id={{canvasId}} [ngStyle]="{left: left + 'px'}"></canvas>
 </div>
 
 <mat-toolbar class="edit-toolbar">

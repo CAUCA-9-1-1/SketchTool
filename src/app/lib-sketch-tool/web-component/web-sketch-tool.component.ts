@@ -1,9 +1,9 @@
 import { Component, OnInit, Input, HostListener, Output, OnChanges, EventEmitter } from '@angular/core';
-import { forEach } from '@angular/router/src/utils/collection';
 import { CanvasManagerService } from './../services/canvas-manager.service';
 import { AvailableGeometricShape } from './../constants/available-geometric-shapes';
 import { KEY_CODE } from './../constants/key-code';
 import { fabric } from 'fabric';
+import Guid from 'devextreme/core/guid';
 
 const Black = '#000000';
 const Transparent = 'transparent';
@@ -22,10 +22,7 @@ export class WebSketchToolComponent implements OnInit, OnChanges {
   public availableGeometricShapes = AvailableGeometricShape;
   public isDrawing: boolean;
   public isCropping: boolean;
-  public isLastImage: boolean;
-
-  private isLoaded: boolean;
-  private previousImageData: string;
+  public canvasId = new Guid().toString();
 
   @Input() public imageData: string;
   @Input() public loadedJson: string;
@@ -40,27 +37,24 @@ export class WebSketchToolComponent implements OnInit, OnChanges {
     this.strokeColor = Black;
     this.fillColor = Transparent;
     this.isCropping = false;
-    this.isLoaded = false;
   }
 
   ngOnInit() {
-    this.setCanvas();
+    this.canvasManagerService.createCanvas(this.canvasId);
   }
 
   ngOnChanges() {
-      this.setCanvas();
+    this.setCanvas();
   }
 
   private setCanvas() {
-    this.canvasManagerService.emptyCanvas();
     if (this.imageData) {
+      this.canvasManagerService.emptyCanvas();
       if (this.loadedJson == null || this.loadedJson.length < 10) {
         this.canvasManagerService.setBackgroundFromURL(this.imageData);
       } else {
           this.canvasManagerService.loadfromJson(JSON.parse(this.loadedJson));
       }
-      this.isLoaded = true;
-      this.previousImageData = this.imageData;
       this.canvasManagerService.renderCanvas();
       this.emitCanvas();
     }
