@@ -467,10 +467,10 @@ export class CanvasManagerService {
   }
 
   public ajustCropRectangleFromMouse(event: MouseEvent): boolean {
-    const x = Math.min(event.layerX, this.mousePosition.x),
-      y = Math.min(event.layerY, this.mousePosition.y),
-      w = Math.abs(event.layerX - this.mousePosition.x),
-      h = Math.abs(event.layerY - this.mousePosition.y);
+    const x = Math.min(event.offsetX, this.mousePosition.x),
+      y = Math.min(event.offsetY, this.mousePosition.y),
+      w = Math.abs(event.offsetX - this.mousePosition.x),
+      h = Math.abs(event.offsetY - this.mousePosition.y);
 
     if (!w || !h) {
       return false;
@@ -488,11 +488,11 @@ export class CanvasManagerService {
   }
 
   public startSelectingCropRectangleFromMouse(event: MouseEvent): void {
-    this.cropRectangle.left = event.layerX;
-    this.cropRectangle.top = event.layerY;
+    this.cropRectangle.left = event.offsetX;
+    this.cropRectangle.top = event.offsetY;
     this.cropRectangle.setCoords();
 
-    this.mousePosition = {x: event.layerX, y: event.layerY };
+    this.mousePosition = {x: event.offsetX, y: event.offsetY };
 
     this.canvas.renderAll();
     this.cropRectangle.visible = true;
