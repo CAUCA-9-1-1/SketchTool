@@ -23,9 +23,9 @@ export class CanvasManagerService {
   private cropRectangle: fabric.Rect;
   private mousePosition: Position;
   private lastPanPosition: fabric.Point;
+  private canvasId: string;
 
   constructor() {
-    this.emptyCanvas();
     this.mousePosition = {x: 0, y: 0};
     this.left = 0;
   }
@@ -47,14 +47,20 @@ export class CanvasManagerService {
   }
 
   get divCanvasContainer() {
-    return document.getElementsByClassName('div-canvas-container')[0];
+    let collection = document.getElementsByClassName('div-canvas-container');
+    return collection[collection.length -1];
+  }
+
+  public createCanvas(canvasId: string): void {
+    this.canvasId = canvasId;
+    this.canvas = new fabric.Canvas(this.canvasId);
   }
 
   public emptyCanvas(): void {
     if (this.canvas) {
       this.canvas.dispose();
     }
-    this.canvas = new fabric.Canvas('canvas');
+    this.canvas = new fabric.Canvas(this.canvasId);
     this.canvas.clear();
     this.canvas.remove(this.canvas.getObjects());
   }
@@ -242,9 +248,7 @@ export class CanvasManagerService {
 
   public setBackgroundFromURL(backgroundImageURL: string): Promise<void> {
     const container =  this.divCanvasContainer;
-
-    this.canvas.setWidth(container.clientWidth);
-    this.canvas.setHeight(container.clientHeight);
+    this.setCanvasSize(container.clientWidth, container.clientHeight);
 
     return new Promise(
       (resolve, reject): void => {
@@ -262,8 +266,7 @@ export class CanvasManagerService {
             scaleY: scaleData.scaleFactor
           });
 
-          this.canvas.setWidth(f_img.width * scaleData.scaleFactor);
-          this.canvas.setHeight(f_img.height * scaleData.scaleFactor);
+          this.setCanvasSize(f_img.width * scaleData.scaleFactor, f_img.height * scaleData.scaleFactor);
 
           this.canvas.renderAll();
           resolve();
