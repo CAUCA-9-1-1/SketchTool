@@ -23,7 +23,7 @@ export class CanvasManagerService {
   private cropRectangle: fabric.Rect;
   private mousePosition: Position;
   private lastPanPosition: fabric.Point;
-  private canvasId: string;
+  private canvasId =  'canvas';
 
   constructor() {
     this.mousePosition = {x: 0, y: 0};
