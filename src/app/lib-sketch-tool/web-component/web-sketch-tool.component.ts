@@ -34,9 +34,7 @@ export class WebSketchToolComponent implements OnInit, OnChanges {
   }
 
   constructor(private canvasManagerService: CanvasManagerService) {
-    this.strokeColor = Black;
-    this.fillColor = Transparent;
-    this.isCropping = false;
+    this.initializeSketchVariables();
   }
 
   ngOnInit() {
@@ -44,7 +42,14 @@ export class WebSketchToolComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges() {
+    this.initializeSketchVariables();
     this.setCanvas();
+  }
+
+  private initializeSketchVariables() {
+    this.strokeColor = Black;
+    this.fillColor = Transparent;
+    this.isCropping = false;
   }
 
   private setCanvas() {
