@@ -458,8 +458,8 @@ export class CanvasManagerService {
       stroke: '#ccc',
       strokeDashArray: [2, 2],
       opacity: 1,
-      width: 1,
-      height: 1
+      width: 0,
+      height: 0
     });
 
     this.cropRectangle.visible = false;
@@ -467,6 +467,7 @@ export class CanvasManagerService {
   }
 
   public ajustCropRectangleFromMouse(event: MouseEvent): boolean {
+
     const x = Math.min(event.offsetX, this.mousePosition.x),
       y = Math.min(event.offsetY, this.mousePosition.y),
       w = Math.abs(event.offsetX - this.mousePosition.x),
@@ -494,7 +495,6 @@ export class CanvasManagerService {
 
     this.mousePosition = {x: event.offsetX, y: event.offsetY };
 
-    this.canvas.renderAll();
     this.cropRectangle.visible = true;
     this.canvas.bringToFront(this.cropRectangle);
   }
