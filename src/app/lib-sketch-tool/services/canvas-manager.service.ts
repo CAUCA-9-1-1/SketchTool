@@ -386,8 +386,8 @@ export class CanvasManagerService {
 
     const container = this.divCanvasContainer;
 
-    const width = backgroundImage['width'];
-    const height = backgroundImage['height'];
+    const width = json['width'];
+    const height = json['height'];
 
     const canvasWidth = container.clientWidth;
     const canvasHeight = container.clientHeight;
@@ -408,8 +408,8 @@ export class CanvasManagerService {
 
     const objectScale = scaleFactor / backgroundImage['scaleX'];
 
-    backgroundImage['scaleX'] = scaleFactor;
-    backgroundImage['scaleY'] = scaleFactor;
+    backgroundImage['scaleX'] *= scaleFactor;
+    backgroundImage['scaleY'] *= scaleFactor;
 
     this.setCanvasSize(width * scaleFactor, height * scaleFactor);
 
