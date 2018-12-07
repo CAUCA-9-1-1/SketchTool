@@ -4,7 +4,7 @@
     (mousemove)="mouseMove($event)"
     (mouseup)="mouseUp($event)"
 >
-    <canvas id={{canvasId}}></canvas>
+    <canvas id="0"></canvas>
 </div>
 
 <mat-toolbar class="edit-toolbar">
@@ -113,5 +113,12 @@
         class="tool-button"
     >
         <i class="fas fa-download"></i>
+    </button>
+
+    <button
+        class="tool-button" 
+        (click)="undo()" 
+        *ngIf="isUndoAvailable">
+        <i class="fas fa-undo" id="icon"></i>
     </button>
 </mat-toolbar>
