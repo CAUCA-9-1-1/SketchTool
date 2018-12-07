@@ -22,10 +22,12 @@ export class WebSketchToolComponent implements OnInit, OnChanges {
   public availableGeometricShapes = AvailableGeometricShape;
   public isDrawing: boolean;
   public isCropping: boolean;
-  public canvasId = new Guid().toString();
+  public isUndoAvailable: boolean;
+  public canvasId = "0"; // new Guid().toString();
 
   @Input() public imageData: string;
   @Input() public loadedJson: string;
+  private previousJson: JSON;
 
   @Output() public canvas = new EventEmitter<fabric.Canvas>();
 
@@ -50,18 +52,24 @@ export class WebSketchToolComponent implements OnInit, OnChanges {
     this.strokeColor = Black;
     this.fillColor = Transparent;
     this.isCropping = false;
+    this.isUndoAvailable = false;
   }
 
   private setCanvas() {
     if (this.imageData) {
       this.canvasManagerService.emptyCanvas();
       if (this.loadedJson == null || this.loadedJson.length < 10) {
-        this.canvasManagerService.setBackgroundFromURL(this.imageData);
-      } else {
-          this.canvasManagerService.loadfromJson(JSON.parse(this.loadedJson));
+        this.canvasManagerService.setBackgroundFromURL(this.imageData).then(() => {
+          this.canvasManagerService.renderCanvas();
+          this.emitCanvas();
+        });
+      } else {        
+          this.previousJson = JSON.parse(this.loadedJson);
+          this.canvasManagerService.loadfromJson(JSON.parse(this.loadedJson)).then(() => {
+            this.canvasManagerService.renderCanvas();
+            this.emitCanvas();
+          });
       }
-      this.canvasManagerService.renderCanvas();
-      this.emitCanvas();
     }
   }
 
@@ -117,6 +125,8 @@ export class WebSketchToolComponent implements OnInit, OnChanges {
 
   public crop() {
     this.isCropping = true;
+    this.isUndoAvailable = true;
+    this.previousJson = this.canvasManagerService.jsonFromCanvas();
     this.canvasManagerService.disableSelection();
     this.canvasManagerService.addSelectionRectangle();
   }
@@ -138,6 +148,7 @@ export class WebSketchToolComponent implements OnInit, OnChanges {
     if (this.isCropping) {
       this.canvasManagerService.cropImage();
       this.isCropping = false;
+      this.isUndoAvailable = true;
     }
     this.emitCanvas();
   }
@@ -156,6 +167,12 @@ export class WebSketchToolComponent implements OnInit, OnChanges {
 
   public group() {
     this.canvasManagerService.groupSelectedObjects();
+    this.emitCanvas();
+  }
+
+  public undo() {
+    this.canvasManagerService.loadfromJson(this.previousJson);
+    this.isUndoAvailable = false;
     this.emitCanvas();
   }
 
