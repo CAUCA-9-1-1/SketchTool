@@ -153,7 +153,7 @@ export class MobileSketchToolComponent implements OnInit, OnChanges, AfterViewIn
     this.emitCanvas();
   }
 
-  public mouseUp(event) {
+  public mouseUp() {
     if (this.isCropping) {
       this.isCropping = false;
       this.canvasManagerService.cropImage();
@@ -202,7 +202,13 @@ export class MobileSketchToolComponent implements OnInit, OnChanges, AfterViewIn
 
   public onMoveClicked() {
     this.isPanning = !this.isPanning;
-    (this.isPanning) ? this.canvasManagerService.disableSelection() : this.canvasManagerService.enableSlection();
+    if (this.isPanning) {
+      this.canvasManagerService.disableSelection()
+      this.isDrawing = false;
+    }
+    else {
+      this.canvasManagerService.enableSlection();
+    }
   }
 
   public stopPanning() {
@@ -223,6 +229,10 @@ export class MobileSketchToolComponent implements OnInit, OnChanges, AfterViewIn
     this.isDrawing = !this.isDrawing;
     this.canvasManagerService.toggleFreeDrawing();
     this.canvasManagerService.setFreeDrawingBrushColor(this.strokeColor);
+
+    if (this.isDrawing) {
+      this.isPanning = false;
+    }
   }
 
   private disableDrawing() {
