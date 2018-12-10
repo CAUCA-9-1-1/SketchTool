@@ -363,7 +363,7 @@ export class CanvasManagerService {
   }
 
   public jsonFromCanvas(): JSON {
-    return this.canvas.toJSON();
+    return this.canvas.toJSON(['width', 'height']);
   }
 
   public loadfromJson(json: JSON): Promise<void> {
@@ -416,10 +416,10 @@ export class CanvasManagerService {
     const objects = json['objects'];
 
     for (let i = 0; i < objects.length; i++) {
-      objects[i]['left'] *= objectScale;
-      objects[i]['top'] *= objectScale;
-      objects[i]['scaleX'] *= objectScale;
-      objects[i]['scaleY'] *= objectScale;
+      objects[i]['left'] *= scaleFactor;
+      objects[i]['top'] *= scaleFactor;
+      objects[i]['scaleX'] *= scaleFactor;
+      objects[i]['scaleY'] *= scaleFactor;
     }
 
     this.canvas.selectable = true;

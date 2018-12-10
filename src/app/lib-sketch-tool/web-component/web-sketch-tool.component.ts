@@ -23,7 +23,7 @@ export class WebSketchToolComponent implements OnInit, OnChanges {
   public isDrawing: boolean;
   public isCropping: boolean;
   public isUndoAvailable: boolean;
-  public canvasId = "0"; // new Guid().toString();
+  public canvasId = new Guid().toString();
 
   @Input() public imageData: string;
   @Input() public loadedJson: string;
@@ -126,9 +126,9 @@ export class WebSketchToolComponent implements OnInit, OnChanges {
   public crop() {
     this.isCropping = true;
     this.isUndoAvailable = true;
-    this.previousJson = this.canvasManagerService.jsonFromCanvas();
     this.canvasManagerService.disableSelection();
     this.canvasManagerService.addSelectionRectangle();
+    this.previousJson = this.canvasManagerService.jsonFromCanvas();
   }
 
   @HostListener('window:keyup', ['$event'])
@@ -171,6 +171,7 @@ export class WebSketchToolComponent implements OnInit, OnChanges {
   }
 
   public undo() {
+    this.canvasManagerService.emptyCanvas();
     this.canvasManagerService.loadfromJson(this.previousJson);
     this.isUndoAvailable = false;
     this.emitCanvas();
