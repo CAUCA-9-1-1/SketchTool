@@ -102,11 +102,13 @@ export class MobileSketchToolComponent implements OnInit, OnChanges, AfterViewIn
   }
 
   public addText() {
+    this.disableAllStates();
     this.canvasManagerService.addText(this.strokeColor, 'text ');
     this.emitCanvas();
   }
 
   public addShape(shape: string) {
+    this.disableAllStates();
     this.canvasManagerService.addGeometricShape(
       this.strokeColor,
       this.fillColor,
@@ -116,6 +118,7 @@ export class MobileSketchToolComponent implements OnInit, OnChanges, AfterViewIn
   }
 
   public addImage(source: string) {
+    this.disableAllStates();
     this.canvasManagerService.addImage(this.iconsPath + source);
     this.emitCanvas();
   }
@@ -129,26 +132,41 @@ export class MobileSketchToolComponent implements OnInit, OnChanges, AfterViewIn
   }
 
   public bringFoward() {
+    this.disableAllStates();
     this.canvasManagerService.bringSelectedObjectsToFront();
     this.emitCanvas();
   }
 
   public sendToBack() {
+    this.disableAllStates();
     this.canvasManagerService.sendSelectedObjectsToBack();
     this.emitCanvas();
   }
 
   public crop() {
-    this.isCropping = true;
-    this.canvasManagerService.resetZoom();
-    this.canvasManagerService.disableSelection();
-    this.canvasManagerService.addSelectionRectangle();
-    this.isUndoAvailable = true;
-    this.previousJson = this.canvasManagerService.jsonFromCanvas();
-    this.emitCanvas();
+    if (this.isCropping) {
+      this.disableCroppping();
+    }
+    else {
+      this.disableAllStates();
+      this.isCropping = true;
+      this.canvasManagerService.resetZoom();
+      this.canvasManagerService.disableSelection();
+      this.canvasManagerService.addSelectionRectangle();
+      this.isUndoAvailable = true;
+      this.previousJson = this.canvasManagerService.jsonFromCanvas();
+      this.emitCanvas();
+    }
+  }
+
+  private disableCroppping() {
+    this.isCropping = false;
+    this.canvasManagerService.enableSlection();
+    this.isUndoAvailable = false;
   }
 
   public deleteSelection() {
+    this.disableAllStates();
     this.canvasManagerService.deleteSelectedObjects();
     this.emitCanvas();
   }
@@ -185,6 +203,7 @@ export class MobileSketchToolComponent implements OnInit, OnChanges, AfterViewIn
   }
 
   public group() {
+    this.disableAllStates();
     this.canvasManagerService.groupSelectedObjects();
     this.emitCanvas();
   }
@@ -202,13 +221,23 @@ export class MobileSketchToolComponent implements OnInit, OnChanges, AfterViewIn
 
   public onMoveClicked() {
     this.isPanning = !this.isPanning;
+    this.disableDrawing();
     if (this.isPanning) {
       this.canvasManagerService.disableSelection()
-      this.isDrawing = false;
     }
     else {
       this.canvasManagerService.enableSlection();
     }
+  }
+
+  private disablePanning() {
+    this.isPanning = false;
+    this.canvasManagerService.enableSlection();
+  }
+
+  private disableAllStates() {
+    this.disableDrawing();
+    this.disablePanning();
   }
 
   public stopPanning() {
