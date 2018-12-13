@@ -406,8 +406,6 @@ export class CanvasManagerService {
 
     this.left = left;
 
-    const objectScale = scaleFactor / backgroundImage['scaleX'];
-
     backgroundImage['scaleX'] *= scaleFactor;
     backgroundImage['scaleY'] *= scaleFactor;
 
@@ -421,11 +419,6 @@ export class CanvasManagerService {
       objects[i]['scaleX'] *= scaleFactor;
       objects[i]['scaleY'] *= scaleFactor;
     }
-
-    this.canvas.selectable = true;
-    this.canvas.selection = true;
-
-    this.canvas.renderAll();
   }
 
   public exportImageAsDataURL(): string {
