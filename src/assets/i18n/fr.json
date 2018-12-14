@@ -1,0 +1,16 @@
+{
+  "sketchToolTip": {
+    "square": "Carré",
+    "circle": "Cercle",
+    "triangle": "Triangle",
+    "line": "Ligne",
+    "text": "Texte",
+    "crop": "Rogner",
+    "draw": "Dessiner",
+    "group": "Grouper",
+    "bringFoward": "Mettre à l'avant",
+    "pushToBack": "Mettre à l'arrière",
+    "delete": "Supprimer",
+    "download": "Télécharger"
+  }
+}

@@ -1,6 +1,6 @@
 {
   "name": "lib-sketch-tool",
-  "version": "3.0.18",
+  "version": "1.6.3",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
