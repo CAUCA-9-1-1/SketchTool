@@ -1,5 +1,5 @@
 <div class="div-sketch-tool" *ngIf="!isShowingResult">
-    <lib-web-sketch-tool [imageData]="imageUrl" (canvas)="updateCanvas($event)"></lib-web-sketch-tool>
+    <lib-web-sketch-tool [imageData]="imageUrl" [loadedJson]="" (canvas)="updateCanvas($event)"></lib-web-sketch-tool>
 </div>
 
 <button mat-button (click)="showResult()" *ngIf="!isShowingResult">Show result</button>
