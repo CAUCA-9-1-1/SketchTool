@@ -3,6 +3,7 @@ import { CanvasManagerService } from './../services/canvas-manager.service';
 import { AvailableGeometricShape } from './../constants/available-geometric-shapes';
 import { KEY_CODE } from './../constants/key-code';
 import { fabric } from 'fabric';
+import { TranslateService } from '@ngx-translate/core';
 import Guid from 'devextreme/core/guid';
 
 const Black = '#000000';
@@ -18,12 +19,14 @@ const Transparent = 'transparent';
 export class WebSketchToolComponent implements OnInit, OnChanges {
   public fillColor: string;
   public strokeColor: string;
+  public toolTipPosition = "above";
 
   public availableGeometricShapes = AvailableGeometricShape;
   public isDrawing: boolean;
   public isCropping: boolean;
   public isUndoAvailable: boolean;
   public canvasId = new Guid().toString();
+  public toolTips;
 
   @Input() public imageData: string;
   @Input() public loadedJson: string;
@@ -35,12 +38,20 @@ export class WebSketchToolComponent implements OnInit, OnChanges {
     return this.canvasManagerService.left;
   }
 
-  constructor(private canvasManagerService: CanvasManagerService) {
+  constructor(translateService: TranslateService, private canvasManagerService: CanvasManagerService) {
     this.initializeSketchVariables();
+    this.canvasManagerService.createCanvas(this.canvasId);
+
+    translateService.get([
+      'sketchToolTip.square', 'sketchToolTip.circle', 'sketchToolTip.triangle', 'sketchToolTip.line', 'sketchToolTip.text', 'sketchToolTip.crop',
+      'sketchToolTip.draw', 'sketchToolTip.group', 'sketchToolTip.bringFoward', 'sketchToolTip.pushToBack', 'sketchToolTip.delete',
+      'sketchToolTip.download',
+    ]).subscribe(data => {
+      this.toolTips = data;
+    })
   }
 
   ngOnInit() {
-    this.canvasManagerService.createCanvas(this.canvasId);
   }
 
   ngOnChanges() {
@@ -63,12 +74,12 @@ export class WebSketchToolComponent implements OnInit, OnChanges {
           this.canvasManagerService.renderCanvas();
           this.emitCanvas();
         });
-      } else {        
-          this.previousJson = JSON.parse(this.loadedJson);
-          this.canvasManagerService.loadfromJson(JSON.parse(this.loadedJson)).then(() => {
-            this.canvasManagerService.renderCanvas();
-            this.emitCanvas();
-          });
+      } else {
+        this.previousJson = JSON.parse(this.loadedJson);
+        this.canvasManagerService.loadfromJson(JSON.parse(this.loadedJson)).then(() => {
+          this.canvasManagerService.renderCanvas();
+          this.emitCanvas();
+        });
       }
     }
   }
