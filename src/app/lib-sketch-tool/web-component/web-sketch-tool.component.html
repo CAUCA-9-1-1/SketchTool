@@ -1,150 +1,101 @@
-<div
-    class="div-canvas-container"
-    (mousedown)="mouseDown($event)"
-    (mousemove)="mouseMove($event)"
-    (mouseup)="mouseUp($event)"
->
+
+
+<div class="div-canvas-container" (mousedown)="mouseDown($event)" (mousemove)="mouseMove($event)" (mouseup)="mouseUp($event)">
     <canvas id={{canvasId}}></canvas>
 </div>
 
-<mat-toolbar class="edit-toolbar" *ngIf="toolTips">
-    <input
-        mat-button
-        class="colorPicker"
-        [(colorPicker)]="strokeColor"
-        [style.background]="strokeColor"
-        (colorPickerChange)="changeStrokeColor()"
-        [cpPositionOffset]='-500'
-        [cpDisableInput]=true
-    >
+<mat-toolbar class="edit-toolbar" *ngIf="toolTips && !isSelectingPictogram">
+    <input mat-button class="colorPicker" [(colorPicker)]="strokeColor" [style.background]="strokeColor"
+        (colorPickerChange)="changeStrokeColor()" [cpPositionOffset]='-500' [cpDisableInput]=true>
 
-    <button
-        class="tool-button"
-        matTooltip="{{toolTips['sketchToolTip.square']}}"
-        [matTooltipPosition]="toolTipPosition"
-        (click)="addShape('Rectangle')"
-        [disabled]="isDrawing"
-    >
+    <button mat-button class="tool-button" matTooltip="{{toolTips['sketchToolTip.square']}}" [matTooltipPosition]="toolTipPosition"
+        (click)="addShape('Rectangle')" [disabled]="isDrawing">
         <i class="fas fa-square"></i>
     </button>
 
-    <button
-        class="tool-button"
-        matTooltip="{{toolTips['sketchToolTip.circle']}}"
-        [matTooltipPosition]="toolTipPosition"
-        (click)="addShape('Circle')"
-        [disabled]="isDrawing"
-    >
+    <button mat-button class="tool-button" matTooltip="{{toolTips['sketchToolTip.circle']}}" [matTooltipPosition]="toolTipPosition"
+        (click)="addShape('Circle')" [disabled]="isDrawing">
         <i class="fas fa-circle"></i>
     </button>
 
-    <button
-        class="tool-button"
-        matTooltip="{{toolTips['sketchToolTip.triangle']}}"
-        [matTooltipPosition]="toolTipPosition"
-        (click)="addShape('Triangle')"
-        [disabled]="isDrawing"
-    >
+    <button mat-button class="tool-button" matTooltip="{{toolTips['sketchToolTip.triangle']}}" [matTooltipPosition]="toolTipPosition"
+        (click)="addShape('Triangle')" [disabled]="isDrawing">
         <i class="fas fa-caret-up"></i>
     </button>
 
-    <button
-        class="tool-button"
-        matTooltip="{{toolTips['sketchToolTip.line']}}"
-        [matTooltipPosition]="toolTipPosition"
-        (click)="addShape('Line')"
-        [disabled]="isDrawing"
-    >
+    <button mat-button class="tool-button" matTooltip="{{toolTips['sketchToolTip.line']}}" [matTooltipPosition]="toolTipPosition"
+        (click)="addShape('Line')" [disabled]="isDrawing">
         <i class="fas fa-minus"></i>
     </button>
 
-    <button
-        class="tool-button"
-        matTooltip="{{toolTips['sketchToolTip.text']}}"
-        [matTooltipPosition]="toolTipPosition"
-        (click)="addText()"
-        [disabled]="isDrawing"
-    >
+    <button mat-button class="tool-button" matTooltip="{{toolTips['sketchToolTip.addPictograms']}}" [matTooltipPosition]="toolTipPosition"
+        (click)="showPictogramSlection()" [disabled]="isDrawing">
+        <i class="fas fa-images"></i>
+    </button>
+
+    <button mat-button class="tool-button" matTooltip="{{toolTips['sketchToolTip.text']}}" [matTooltipPosition]="toolTipPosition"
+        (click)="addText()" [disabled]="isDrawing">
         <i class="fas fa-font"></i>
     </button>
 
-    <button
-        class="tool-button"
-        matTooltip="{{toolTips['sketchToolTip.crop']}}"
-        [matTooltipPosition]="toolTipPosition"
-        color="accent"
-        (click)="crop()"
-        [disabled]="isDrawing"
-    >
+    <button mat-button class="tool-button" matTooltip="{{toolTips['sketchToolTip.crop']}}" [matTooltipPosition]="toolTipPosition"
+        color="accent" (click)="crop()" [disabled]="isDrawing">
         <i class="fas fa-crop"></i>
     </button>
 
-    <button
-        (click)="draw()"
-        matTooltip="{{toolTips['sketchToolTip.draw']}}"
-        [matTooltipPosition]="toolTipPosition"
-        class="tool-button"
-    >
+    <button mat-button (click)="draw()" matTooltip="{{toolTips['sketchToolTip.draw']}}" [matTooltipPosition]="toolTipPosition"
+        class="tool-button">
         <i class="fas fa-pencil-alt"></i>
     </button>
 
-    <button
-        class="tool-button"
-        matTooltip="{{toolTips['sketchToolTip.group']}}"
-        [matTooltipPosition]="toolTipPosition"
-        (click)="group()"
-        [disabled]="isDrawing"
-    >
+    <button mat-button class="tool-button" matTooltip="{{toolTips['sketchToolTip.group']}}" [matTooltipPosition]="toolTipPosition"
+        (click)="group()" [disabled]="isDrawing">
         <i class="fas fa-object-group"></i>
     </button>
 
-    <button
-        class="tool-button"
-        matTooltip="{{toolTips['sketchToolTip.bringFoward']}}"
-        [matTooltipPosition]="toolTipPosition"
-        color="accent"
-        (click)="bringFoward()"
-        [disabled]="isDrawing"
-    >
+    <button mat-button class="tool-button" matTooltip="{{toolTips['sketchToolTip.bringFoward']}}" [matTooltipPosition]="toolTipPosition"
+        color="accent" (click)="bringFoward()" [disabled]="isDrawing">
         <i class="fas fa-angle-up"></i>
     </button>
 
-    <button
-        class="tool-button"
-        matTooltip="{{toolTips['sketchToolTip.pushToBack']}}"
-        [matTooltipPosition]="toolTipPosition"
-        color="accent"
-        (click)="sendToBack()"
-        [disabled]="isDrawing"
-    >
+    <button mat-button class="tool-button" matTooltip="{{toolTips['sketchToolTip.pushToBack']}}" [matTooltipPosition]="toolTipPosition"
+        color="accent" (click)="sendToBack()" [disabled]="isDrawing">
         <i class="fas fa-angle-down"></i>
     </button>
 
-    <button
-        class="tool-button"
-        matTooltip="{{toolTips['sketchToolTip.delete']}}"
-        [matTooltipPosition]="toolTipPosition"
-        (click)="deleteSelection()"
-        [disabled]="isDrawing"
-    >
+    <button mat-button class="tool-button" matTooltip="{{toolTips['sketchToolTip.delete']}}" [matTooltipPosition]="toolTipPosition"
+        (click)="deleteSelection()" [disabled]="isDrawing">
         <i class="fas fa-trash"></i>
     </button>
 
-    <button
-        class="tool-button"
-        matTooltip="{{toolTips['sketchToolTip.download']}}"
-        [matTooltipPosition]="toolTipPosition"
-        (click)="saveImage()"
-    >
+    <button mat-button class="tool-button" matTooltip="{{toolTips['sketchToolTip.download']}}" [matTooltipPosition]="toolTipPosition"
+        (click)="saveImage()">
         <i class="fas fa-download"></i>
     </button>
 
-    <button
-        class="tool-button" 
-        matTooltip="{{toolTips['sketchToolTip.undo']}}"
-        [matTooltipPosition]="toolTipPosition"
-        (click)="undo()" 
-        *ngIf="isUndoAvailable">
+    <button mat-button class="tool-button" matTooltip="{{toolTips['sketchToolTip.undo']}}" [matTooltipPosition]="toolTipPosition"
+        (click)="undo()" *ngIf="isUndoAvailable">
         <i class="fas fa-undo" id="icon"></i>
     </button>
 </mat-toolbar>
+
+<mat-toolbar class="edit-toolbar" *ngIf="isSelectingPictogram">
+    <div class="pictograms">
+        <ul>
+            <li
+                *ngFor="let picto of pictograms"
+                (click)="addImage(picto)"
+            >
+                <div class="picto">
+                    <img src="{{pictogramsPath}}{{picto}}">
+                </div>
+            </li>
+        </ul>
+        <button mat-button class="tool-button" matTooltip="{{toolTips['cancel']}}" [matTooltipPosition]="toolTipPosition"
+        (click)="cancelPictogramSelection()">
+            <i class="fas fa-times-circle" id="icon"></i>
+        </button>
+    </div>
+</mat-toolbar>
+
+

@@ -29,8 +29,8 @@ export class MobileSketchToolComponent implements OnInit, OnChanges, AfterViewIn
 
   @Input() public imageData: string;
   @Input() public loadedJson: string;
-  @Input() public iconsPath: string;
-  @Input() public icons: [string];
+  @Input() public pictogramsPath: string;
+  @Input() public pictograms: [string];
 
   @Output() public canvas = new EventEmitter<fabric.Canvas>();
 
@@ -98,7 +98,7 @@ export class MobileSketchToolComponent implements OnInit, OnChanges, AfterViewIn
   }
 
   get hasPictograms(): boolean {
-    return !(!this.icons);
+    return !(!this.pictograms);
   }
 
   public addText() {
@@ -119,7 +119,7 @@ export class MobileSketchToolComponent implements OnInit, OnChanges, AfterViewIn
 
   public addImage(source: string) {
     this.disableAllStates();
-    this.canvasManagerService.addImage(this.iconsPath + source);
+    this.canvasManagerService.addImage(this.pictogramsPath + source);
     this.emitCanvas();
   }
 
@@ -414,7 +414,7 @@ export class MobileSketchToolComponent implements OnInit, OnChanges, AfterViewIn
 
     const buttons = [];
     const actionSheetStyles = [];
-    const images = this.icons;
+    const images = this.pictograms;
     for (let i = 0; i < images.length; i++) {
       const style = document.createElement('style');
       style.type = 'text/css';
@@ -423,7 +423,7 @@ export class MobileSketchToolComponent implements OnInit, OnChanges, AfterViewIn
         i +
         '{background: url(' +
         "'" +
-        this.iconsPath +
+        this.pictogramsPath +
         images[i] +
         "'" +
         ') no-repeat !important;padding-left:50px !important;height:80px; background-position: left center !important;}';

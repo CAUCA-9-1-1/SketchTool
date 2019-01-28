@@ -1,5 +1,7 @@
 {
+  "cancel": "Annuler",
   "sketchToolTip": {
+    "addPictograms": "Ajouter des pictogrammes",
     "square": "Carré",
     "circle": "Cercle",
     "triangle": "Triangle",

@@ -21,13 +21,21 @@
     min-width: 0;
 }
 
-  .tool-button {
+.tool-button {
+  min-width: 40px;
+  padding: 0%;
   width: 40px;
   height: 35px;
+  align-content: center;
   margin-right: 10px;
   vertical-align: middle;
   border: 0ch;
   border-radius: 2px;
+  background-color: lightgray;
+}
+
+.tool-button:hover {
+  background-color: darkgrey;
 }
 
 .colorPicker {
@@ -42,3 +50,34 @@ i {
   font-size: 1.5em;
   color: black;
 }
+
+.pictograms { 
+  width: 800px; 
+  height: 35px; 
+  padding-top: 2px; 
+  display: flex;
+  justify-content: center;
+} 
+
+ul { 
+  padding: 0; 
+  margin: 0; 
+  align-content: center;
+}
+
+li { 
+  list-style-type: none; 
+  overflow: hidden; 
+  display: flex; 
+  text-decoration: none; 
+  float: left; 
+} 
+
+img { 
+  width: 33px; 
+  height: 33px; 
+  padding: 1px; 
+  border: 1px solid #ddd; 
+  border-radius: 4px; 
+  margin-right: 10px;
+} 
