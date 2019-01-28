@@ -25,11 +25,15 @@ export class WebSketchToolComponent implements OnInit, OnChanges {
   public isDrawing: boolean;
   public isCropping: boolean;
   public isUndoAvailable: boolean;
+  public isSelectingPictogram: boolean;
   public canvasId = new Guid().toString();
   public toolTips;
 
   @Input() public imageData: string;
   @Input() public loadedJson: string;
+  @Input() public pictogramsPath: string;
+  @Input() public pictograms: [string];
+
   private previousJson: JSON;
 
   @Output() public canvas = new EventEmitter<fabric.Canvas>();
@@ -43,7 +47,7 @@ export class WebSketchToolComponent implements OnInit, OnChanges {
     this.canvasManagerService.createCanvas(this.canvasId);
 
     translateService.get([
-      'sketchToolTip.square', 'sketchToolTip.circle', 'sketchToolTip.triangle', 'sketchToolTip.line', 'sketchToolTip.text', 'sketchToolTip.crop',
+      'cancel', 'sketchToolTip.addPictograms','sketchToolTip.square', 'sketchToolTip.circle', 'sketchToolTip.triangle', 'sketchToolTip.line', 'sketchToolTip.text', 'sketchToolTip.crop',
       'sketchToolTip.draw', 'sketchToolTip.group', 'sketchToolTip.bringFoward', 'sketchToolTip.pushToBack', 'sketchToolTip.delete',
       'sketchToolTip.download',
     ]).subscribe(data => {
@@ -64,6 +68,7 @@ export class WebSketchToolComponent implements OnInit, OnChanges {
     this.fillColor = Transparent;
     this.isCropping = false;
     this.isUndoAvailable = false;
+    this.isSelectingPictogram = false;
   }
 
   private setCanvas() {
@@ -136,7 +141,6 @@ export class WebSketchToolComponent implements OnInit, OnChanges {
 
   public crop() {
     this.isCropping = true;
-    this.isUndoAvailable = true;
     this.canvasManagerService.disableSelection();
     this.canvasManagerService.addSelectionRectangle();
     this.previousJson = this.canvasManagerService.jsonFromCanvas();
@@ -186,6 +190,21 @@ export class WebSketchToolComponent implements OnInit, OnChanges {
     this.canvasManagerService.loadfromJson(this.previousJson);
     this.isUndoAvailable = false;
     this.emitCanvas();
+  }
+
+  public addImage(source: string) {
+    this.canvasManagerService.addImage(this.pictogramsPath + source);
+    this.emitCanvas();
+  }
+
+  public showPictogramSlection() {
+    this.isCropping = false;
+    this.isDrawing = false;
+    this.isSelectingPictogram = true;
+  }
+
+  public cancelPictogramSelection() {
+    this.isSelectingPictogram = false;
   }
 
   public emitCanvas() {
