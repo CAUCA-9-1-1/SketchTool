@@ -9,6 +9,10 @@ import { TranslateService } from '@ngx-translate/core';
 export class AppComponent implements AfterViewInit {
   public imageUrl: string;
   public isShowingResult: boolean;
+  public pictogramsPath = "./assets/pictograms/";
+  public pictograms =["AccesPrincipal.png", "Annonciateur.png", "BoiteClees.png", "BorneIncendie.png",
+                      "CamionPompier.png", "GazNaturel.png", "GazPropane.png", "Generatrice.png"];
+
 
   private canvas;
 
