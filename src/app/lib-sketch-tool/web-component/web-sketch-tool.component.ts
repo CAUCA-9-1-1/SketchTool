@@ -90,11 +90,13 @@ export class WebSketchToolComponent implements OnInit, OnChanges {
   }
 
   public addText() {
+    this.disableAllStates();
     this.canvasManagerService.addText(this.strokeColor, ' ');
     this.emitCanvas();
   }
 
   public addShape(shape: string) {
+    this.disableAllStates();
     this.canvasManagerService.addGeometricShape(
       this.strokeColor,
       this.fillColor,
@@ -112,22 +114,26 @@ export class WebSketchToolComponent implements OnInit, OnChanges {
   }
 
   public bringFoward() {
+    this.disableAllStates();
     this.canvasManagerService.bringSelectedObjectsToFront();
     this.emitCanvas();
   }
 
   public sendToBack() {
+    this.disableAllStates();
     this.canvasManagerService.sendSelectedObjectsToBack();
     this.emitCanvas();
   }
 
   public draw() {
+    this.disableCropping();
     this.isDrawing = !this.isDrawing;
     this.canvasManagerService.toggleFreeDrawing();
     this.canvasManagerService.setFreeDrawingBrushColor(this.strokeColor);
   }
 
   public saveImage() {
+    this.disableAllStates();
     const dataURL = this.canvasManagerService.exportImageAsDataURL();
 
     const link = document.createElement('a');
@@ -140,6 +146,7 @@ export class WebSketchToolComponent implements OnInit, OnChanges {
   }
 
   public crop() {
+    this.disableDrawing();
     this.isCropping = true;
     this.canvasManagerService.disableSelection();
     this.canvasManagerService.addSelectionRectangle();
@@ -155,6 +162,7 @@ export class WebSketchToolComponent implements OnInit, OnChanges {
   }
 
   public deleteSelection() {
+    this.disableAllStates();
     this.canvasManagerService.deleteSelectedObjects();
     this.emitCanvas();
   }
@@ -181,11 +189,13 @@ export class WebSketchToolComponent implements OnInit, OnChanges {
   }
 
   public group() {
+    this.disableAllStates();
     this.canvasManagerService.groupSelectedObjects();
     this.emitCanvas();
   }
 
   public undo() {
+    this.disableAllStates();
     this.canvasManagerService.emptyCanvas();
     this.canvasManagerService.loadfromJson(this.previousJson);
     this.isUndoAvailable = false;
@@ -193,13 +203,13 @@ export class WebSketchToolComponent implements OnInit, OnChanges {
   }
 
   public addImage(source: string) {
+    this.disableAllStates();
     this.canvasManagerService.addImage(this.pictogramsPath + source);
     this.emitCanvas();
   }
 
   public showPictogramSlection() {
-    this.isCropping = false;
-    this.isDrawing = false;
+    this.disableAllStates();
     this.isSelectingPictogram = true;
   }
 
@@ -209,5 +219,23 @@ export class WebSketchToolComponent implements OnInit, OnChanges {
 
   public emitCanvas() {
     this.canvas.emit(this.canvasManagerService.canvas);
+  }
+
+  private disableAllStates() {
+    this.disableDrawing();
+    this.disableCropping();
+  }
+
+  private disableDrawing() {
+    if (this.isDrawing) {
+      this.isDrawing = false;
+      this.canvasManagerService.toggleFreeDrawing();
+    }
+  }
+
+  private disableCropping() {
+    if (this.isCropping) {
+      this.isCropping = false;
+    }
   }
 }
